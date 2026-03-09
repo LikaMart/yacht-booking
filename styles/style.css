@@ -1,0 +1,92 @@
+:root {
+  /* ძირითადი ფერები */
+  --color-primary: #0a3d62; /* ღრმა ლურჯი - header/nav */
+  --color-secondary: #1e90ff; /* ნათელი ლურჯი - ღილაკები, hover */
+  --color-accent: #f39c12; /* ოქროსფერი აქცენტები */
+  --color-text: #333333; /* ძირითადი ტექსტი */
+  --color-bg: #ffffff; /* ფონის ფერი */
+  --color-light: #f5f5f5; /* ღია ნაცრისფერი სექციებისთვის */
+
+  /* ზომები */
+  --space-s: 1rem; /* 16px */
+  --space-m: 2rem; /* 32px */
+  --space-l: 3rem; /* 48px */
+  --font-s: 1rem; /* 16px */
+  --font-m: 1.25rem; /* 20px */
+  --font-l: 3rem; /* 48px */
+}
+
+body {
+  font-family: "Playfair Display", serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+header {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-m);
+}
+
+header .logo {
+  width: 3rem; /* 48px */
+  height: auto;
+}
+
+nav a {
+  margin: 0 var(--space-s);
+  text-decoration: none;
+  font-size: var(--font-m);
+  color: var(--color-bg);
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.3s;
+}
+
+nav a img {
+  width: 1.25rem; /* 20px */
+  height: 1.25rem;
+  margin-right: 0.5rem;
+}
+
+nav a:hover {
+  color: var(--color-accent);
+}
+
+/* Hero Section */
+.hero {
+  background-color: var(--color-light);
+  text-align: center;
+  padding: var(--space-l) var(--space-m);
+}
+
+.hero h1 {
+  color: var(--color-primary);
+  font-size: var(--font-l);
+}
+
+.hero p {
+  color: var(--color-secondary);
+  font-size: var(--font-m);
+}
+
+.hero img {
+  max-width: 100%;
+  margin-top: var(--space-m);
+  border-radius: 0.625rem; /* 10px */
+}
+
+/* Footer */
+footer {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  text-align: center;
+  padding: var(--space-s);
+  font-size: var(--font-s);
+}
