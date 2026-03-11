@@ -1,12 +1,9 @@
-<!--Github link-->
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yacht Booking</title>
-    <!-- სტილები -->
     <link rel="stylesheet" href="../styles/style.css" />
   </head>
   <body>
@@ -14,15 +11,15 @@
     <header>
       <img src="../assets/icons/ship.png" alt="Logo" class="logo" />
       <nav>
-        <a href="../pages/home.html"
-          ><img src="../assets/icons/home.png" alt="Home" /> Home</a
-        >
-        <a href="../pages/booking.html"
-          ><img src="../assets/icons/cart.png" alt="Booking" /> Booking</a
-        >
-        <a href="../pages/contact.html"
-          ><img src="../assets/icons/phone.png" alt="Contact" /> Contact</a
-        >
+        <a href="../pages/home.html">
+          <img src="../assets/icons/home.png" alt="Home" /> Home
+        </a>
+        <a href="../pages/booking.html">
+          <img src="../assets/icons/cart.png" alt="Booking" /> Booking
+        </a>
+        <a href="../pages/contact.html">
+          <img src="../assets/icons/phone.png" alt="Contact" /> Contact
+        </a>
       </nav>
     </header>
 
@@ -33,10 +30,32 @@
       <img src="../assets/images/main.jpg" alt="Yacht Image" />
     </section>
 
-    <!-- API Data Section -->
+    <!-- Stations Section -->
     <section>
-      <h2>Available Stations</h2>
-      <ul id="stations-list"></ul>
+      <h2>Stations</h2>
+      <input type="text" id="stationFilter" placeholder="Search station..." />
+      <!-- Dropdown container -->
+      <div id="stationDropdown" class="dropdown"></div>
+      <div class="products stations"></div>
+    </section>
+
+    <!-- Departures Section -->
+    <section>
+      <h2>Departures</h2>
+      <input
+        type="text"
+        id="departureFilter"
+        placeholder="Search by destination..."
+      />
+      <!-- Dropdown container -->
+      <div id="departureDropdown" class="dropdown"></div>
+      <div class="products departures"></div>
+    </section>
+
+    <!-- Tickets Section -->
+    <section>
+      <h2>Tickets</h2>
+      <div class="products tickets"></div>
     </section>
 
     <!-- Footer -->
