@@ -1,151 +1,1661 @@
+/* #region VARIABLES & THEMES */
+/* CSS VARIABLES - light theme (default)
+   data-theme="dark" ატრიბუტი html-ზე dark theme-ია*/
 :root {
-  /* ძირითადი ფერები */
-  --color-primary: #0f3550; /* ღრმა ლურჯი - header/nav */
-  --color-secondary: #195d98; /* ნათელი ლურჯი - ღილაკები, hover */
-  --color-accent: #f39c12; /* ოქროსფერი აქცენტები */
-  --color-text: #333333; /* ძირითადი ტექსტი */
-  --color-bg: #84816e; /* ფონის ფერი */
-  --color-light: #f5f5f5; /* ღია ნაცრისფერი სექციებისთვის */
-
-  --space-s: 1rem;
-  --space-m: 2rem;
-  --space-l: 3rem;
-  --font-s: 1rem;
-  --font-m: 1.25rem;
-  --font-l: 3rem;
+  --navy: #1a2744;
+  --blue: #2563eb;
+  --blue-dark: #1d4ed8;
+  --accent: #f59e0b;
+  --red: #ef4444;
+  --bg: #f1f5f9;
+  --bg-alt: #ffffff;
+  --card-bg: #ffffff;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+  --header-bg: #1a2744;
+  --header-text: #ffffff;
+  --input-bg: #ffffff;
 }
 
-body {
-  font-family: "Playfair Display", serif;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+/* Dark theme: html[data-theme="dark"] ყველა ვარიაბელს ხელახლა განსაზღვრავს */
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-alt: #1e293b;
+  --card-bg: #1e293b;
+  --text: #e2e8f0;
+  --text-light: #94a3b8;
+  --border: #334155;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --header-bg: #0f172a;
+  --header-text: #e2e8f0;
+  --input-bg: #1e293b;
+}
+/* #endregion VARIABLES & THEMES */
+
+/* #region RESET & BASE */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* Header */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Noto Sans Georgian", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.6;
+  transition:
+    background 0.3s,
+    color 0.3s;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  /* fixed header-ის გამო - კონტენტი header-ქვემოთ იწყება */
+  padding-top: 4rem;
+}
+/* #endregion RESET & BASE */
+
+/* #region HEADER */
 header {
-  background-color: var(--color-primary);
-  color: var(--color-bg);
+  background: var(--header-bg);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  transition: background 0.3s;
+}
+
+.header-inner {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-m);
+  gap: 2rem;
 }
 
-header .logo {
-  width: 3rem;
-  height: auto;
-  filter: brightness(0) invert(1); /* აქ ფერს ცვლის, არ ვიცოდი იუთუბით ვისწავლე -_- */
+/* ლოგო */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.7rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-decoration: none;
 }
 
-nav img {
-  width: 20px;
-  height: 20px;
-  filter: brightness(0) invert(1); /* აქ ფერს ცვლის */
+.logo-icon {
+  width: 2rem;
+  height: 2rem;
+  /* icon-ებია თეთრ/მუქ ფონზე - brightness filter-ით ვაქცევთ თეთრად */
+  filter: brightness(0) invert(1);
+}
+
+/* ნავიგაცია */
+nav {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
 }
 
 nav a {
-  margin: 0 var(--space-s);
-  text-decoration: none;
-  font-size: var(--font-m);
-  color: var(--color-bg);
   display: inline-flex;
   align-items: center;
-  transition: color 0.3s;
+  gap: 0.35rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 nav a img {
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-right: 0.5rem;
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
 }
 
 nav a:hover {
-  color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent);
 }
 
-/* Hero */
-.hero {
-  background-color: var(--color-light);
-  text-align: center;
-  padding: var(--space-l) var(--space-m);
+nav a:hover img {
+  opacity: 1;
+  filter: brightness(0) saturate(100%) invert(70%) sepia(80%) hue-rotate(0deg);
 }
 
-.hero h1 {
-  color: var(--color-primary);
-  font-size: var(--font-l);
+/* ჰედერის მარჯვენა ბლოკი */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.hero p {
-  color: var(--color-secondary);
-  font-size: var(--font-m);
+/* თემის ღილაკი */
+.icon-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero img {
-  max-width: 30%;
-  margin-top: var(--space-m);
-  border-radius: 0.625rem;
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* Products & Cards */
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-  gap: var(--space-m);
-  padding: var(--space-m);
+/* Auth ბლოკი */
+#guestBtns,
+#userInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-.card {
-  background-color: var(--color-light);
-  border: 1px solid var(--color-primary);
-  border-radius: 0.5rem;
-  padding: var(--space-m);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
+.welcome-text {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.card:hover {
-  transform: translateY(-0.5rem);
-  border-color: var(--color-accent);
-}
-
-.card h3 {
-  color: var(--color-primary);
-  font-size: var(--font-m);
-  margin-bottom: 0.5rem;
-}
-
-.card p {
-  color: var(--color-text);
-  font-size: var(--font-s);
-}
-
-.dropdown {
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-  background: white;
-  position: absolute;
-  width: 250px;
-  display: none; /* default დამალული */
-}
-
-.dropdown p {
-  padding: 8px;
-  margin: 0;
+/* ჰამბურგერი - default hidden, მობილურზე ჩნდება */
+.burger {
+  display: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem;
   cursor: pointer;
 }
 
-.dropdown p:hover {
-  background: #f0f0f0;
+.burger-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: brightness(0) invert(1);
 }
 
-/* Footer */
-footer {
-  background-color: var(--color-primary);
-  color: var(--color-bg);
-  text-align: center;
-  padding: var(--space-s);
-  font-size: var(--font-s);
+/* მობილური მენიუ */
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  background: var(--header-bg);
+  padding: 0 1.5rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.3s;
 }
+
+.mobile-nav.open {
+  display: flex;
+}
+
+.mob-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.mob-link img {
+  width: 14px;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+}
+/* #endregion HEADER */
+
+/* #region BUTTONS */
+.btn-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--blue);
+  color: white;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    transform 0.15s;
+}
+
+.btn-main:hover {
+  background: var(--blue-dark);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-outline.small {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--accent);
+  color: var(--navy);
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.15s;
+}
+
+.btn-secondary:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--red);
+  color: white;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.15s;
+}
+
+.btn-danger:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* საძებნი ღილაკი - icon-only */
+.btn-search {
+  background: var(--blue);
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.btn-search img {
+  width: 1rem;
+  height: 1rem;
+  filter: brightness(0) invert(1); /* თეთრი icon */
+}
+
+.btn-search:hover {
+  background: var(--blue-dark);
+}
+
+/* ღილაკების icon სიზი */
+.btn-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) invert(1);
+}
+
+.full-width {
+  width: 100%;
+  justify-content: center;
+}
+/* #endregion BUTTONS */
+
+/* #region AUTH MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0; /* top/right/bottom/left: 0 */
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(3px);
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.modal-close:hover {
+  opacity: 1;
+}
+.modal-close img {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ტაბ ღილაკები მოდალში */
+.modal-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-light);
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* active ტაბი ლურჯი ბორდერი */
+.tab-btn.active {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.auth-form h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1.25rem;
+  color: var(--text);
+}
+/* #endregion AUTH MODAL */
+
+/* #region HERO */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #2d3e6e 100%);
+  color: white;
+  text-align: center;
+  padding: 8rem 1.5rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  max-width: none;
+  width: 100%;
+}
+
+.hero h1 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: 3px;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.hero p {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+/* ზღვის ანიმაცია hero-ს ბოლოში */
+.sea-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  overflow: hidden;
+}
+
+/* ტალღების ეფექტი CSS-ით */
+.waves-bg {
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  height: 40px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08) 0px,
+    rgba(255, 255, 255, 0.08) 20px,
+    transparent 20px,
+    transparent 40px
+  );
+  animation: waveMove 4s linear infinite;
+}
+
+@keyframes waveMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* გემი - ship.png ფაილი, მოძრაობს მარცხნიდან მარჯვნივ */
+.ship-anim {
+  position: absolute;
+  bottom: 12px;
+  animation: shipSail 20s linear infinite;
+}
+
+.ship-img {
+  width: 2.5rem;
+  height: auto;
+  filter: brightness(0) invert(1); /* თეთრი გემი ბნელ ფონზე */
+  /* ოდნავი ტივტივი */
+  animation: shipBob 2s ease-in-out infinite;
+}
+
+@keyframes shipSail {
+  from {
+    left: -5rem;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes shipBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+/* #endregion HERO */
+
+/* #region SECTIONS & TYPOGRAPHY */
+.section {
+  padding: 4rem 1.5rem;
+  transition: background 0.3s;
+}
+.alt-bg {
+  background: var(--bg-alt);
+}
+
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  color: var(--navy);
+  margin-bottom: 1.5rem;
+  border-left: 5px solid var(--accent);
+  padding-left: 0.75rem;
+}
+
+/* dark mode-ში section title ღია */
+[data-theme="dark"] .section-title {
+  color: var(--accent);
+}
+
+.title-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  /* dark mode-ზეც კარგად გამოჩნდეს */
+  filter: opacity(0.7);
+}
+
+[data-theme="dark"] .title-icon {
+  filter: brightness(0) invert(1) opacity(0.6);
+}
+/* #endregion SECTIONS & TYPOGRAPHY */
+
+/* #region SEARCH & DROPDOWN */
+.search-wrap {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.search-wrap input {
+  padding: 0.65rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.95rem;
+  width: 280px;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  transition:
+    border 0.2s,
+    background 0.3s,
+    color 0.3s;
+}
+
+.search-wrap input:focus {
+  border-color: var(--blue);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 50;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  width: 280px;
+  max-height: 220px;
+  overflow-y: auto;
+  display: none;
+  transition: background 0.3s;
+}
+
+.dropdown p {
+  padding: 0.6rem 1rem;
+  margin: 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.dropdown p:last-child {
+  border-bottom: none;
+}
+
+.dropdown p:hover {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--blue);
+}
+/* #endregion SEARCH & DROPDOWN */
+
+/* #region CARDS */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.25rem;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    background 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.card h3 {
+  color: var(--navy);
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+[data-theme="dark"] .card h3 {
+  color: var(--accent);
+}
+
+.card h4 {
+  color: var(--blue);
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+.card p {
+  color: var(--text-light);
+  font-size: 0.86rem;
+  margin-top: 0.25rem;
+}
+
+/* იახტის ქვე-ბარათი */
+.trainCard {
+  background: rgba(37, 99, 235, 0.05);
+  border-left: 4px solid var(--blue);
+  margin-left: 1rem;
+}
+
+[data-theme="dark"] .trainCard {
+  background: rgba(37, 99, 235, 0.1);
+}
+/* #endregion CARDS */
+
+/* #region FORMS */
+.form-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+  transition: background 0.3s;
+}
+
+.sub-title {
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.95rem;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  transition:
+    border 0.2s,
+    background 0.3s;
+}
+
+.form-group input:focus {
+  border-color: var(--blue);
+}
+
+/* შეტყობინება (success / error) */
+.auth-msg {
+  margin-top: 0.85rem;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.auth-msg.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+.auth-msg.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+.hidden {
+  display: none !important;
+}
+/* #endregion FORMS */
+
+/* #region FOOTER */
+footer {
+  background: var(--header-bg);
+  transition: background 0.3s;
+  padding: 1.5rem;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-copy {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.88rem;
+}
+
+.footer-logo {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+.footer-social {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.footer-social a img {
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.footer-social a:hover img {
+  opacity: 1;
+}
+/* #endregion FOOTER */
+
+/* #region RESPONSIVE */
+@media (max-width: 768px) {
+  /* ნავი იმალება, ჰამბურგერი ჩნდება */
+  nav {
+    display: none;
+  }
+  .burger {
+    display: flex;
+  }
+
+  /* Auth ღილაკების ტექსტი იმარტივება */
+  /* #openRegisterBtn ხილული რჩება ყველა ზომაზე */
+
+  .hero {
+    padding: 6rem 1rem 3.5rem;
+  }
+
+  .section {
+    padding: 2.5rem 1rem;
+  }
+
+  .products {
+    grid-template-columns: 1fr;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-wrap input {
+    width: 100%;
+  }
+  .dropdown {
+    width: 100%;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/*  RESPONSIVE - Mobile (≤480px) */
+@media (max-width: 480px) {
+  .logo span {
+    font-size: 1.3rem;
+  }
+  .section-title {
+    font-size: 1.7rem;
+  }
+  .form-card {
+    padding: 1.25rem;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .modal {
+    padding: 1.5rem;
+  }
+}
+/* #endregion RESPONSIVE */
+
+/* #region select - form-group input-ის იდენტური სტილი */
+.form-group select {
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.95rem;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  transition:
+    border 0.2s,
+    background 0.3s;
+}
+
+.form-group select:focus {
+  border-color: var(--blue);
+}
+
+.form-group select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* LOGO AS LINK */
+a.logo {
+  text-decoration: none;
+}
+
+/* active nav link */
+.active-link {
+  color: var(--accent) !important;
+}
+
+/* FOOTER - 4 სვეტი */
+.footer-inner {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.footer-logo-wrap {
+  margin-bottom: 0.75rem;
+}
+
+.footer-logo {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+.footer-desc {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.footer-heading {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+.footer-contact {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+}
+
+.footer-social {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.footer-social a img {
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.footer-social a:hover img {
+  opacity: 1;
+}
+
+/* Google Maps embed */
+.footer-map iframe {
+  width: 100%;
+  height: 10rem;
+  border: 0;
+  border-radius: 0.5rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  padding: 1rem 1.5rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.85rem;
+}
+/* #endregion FOOTER */
+
+/* #region LOGIN PAGE */
+.auth-page {
+  min-height: calc(100vh - 9rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.auth-container {
+  background: var(--card-bg);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 28rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: background 0.3s;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 0.65rem;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--text-light);
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.auth-tab.active {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.auth-form-page h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+}
+
+.auth-sub {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.auth-switch a {
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+/* #endregion LOGIN PAGE */
+
+/* #region BOOKING PAGE */
+.booking-page {
+  padding: 3rem 1.5rem;
+  min-height: calc(100vh - 9rem);
+}
+
+.page-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  color: var(--navy);
+  margin-bottom: 2rem;
+  border-left: 0.3rem solid var(--accent);
+  padding-left: 0.75rem;
+}
+
+[data-theme="dark"] .page-title {
+  color: var(--accent);
+}
+/* #endregion BOOKING PAGE */
+
+/* #region REVIEWS PAGE */
+.reviews-page {
+  padding: 3rem 1.5rem;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.review-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.2s,
+    background 0.3s;
+}
+
+.review-card:hover {
+  transform: translateY(-0.25rem);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.review-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--accent);
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.review-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.review-date {
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+
+.review-stars {
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.review-text {
+  font-size: 0.88rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.review-form-card {
+  margin-top: 1rem;
+}
+
+.form-group-full {
+  grid-column: 1 / -1;
+}
+
+textarea {
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.95rem;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  resize: vertical;
+  width: 100%;
+  transition:
+    border 0.2s,
+    background 0.3s;
+}
+
+textarea:focus {
+  border-color: var(--blue);
+}
+/* #endregion REVIEWS PAGE */
+
+/* #region PAGE 404 */
+.not-found-page {
+  min-height: calc(100vh - 9rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.not-found-inner {
+  max-width: 30rem;
+}
+
+.not-found-num {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(5rem, 18vw, 9rem);
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: 4px;
+}
+
+.ship-lost {
+  margin: 1rem 0;
+  animation: shipBob 2s ease-in-out infinite;
+}
+
+.lost-ship-img {
+  width: 3.5rem;
+  filter: opacity(0.4);
+}
+
+.not-found-inner h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.not-found-inner p {
+  color: var(--text-light);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+/* select სტილი */
+.form-group select {
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  font-family: "Noto Sans Georgian", sans-serif;
+  font-size: 0.95rem;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  transition:
+    border 0.2s,
+    background 0.3s;
+}
+
+.form-group select:focus {
+  border-color: var(--blue);
+}
+
+.form-group select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* #endregion PAGE 404 */
+
+/* #region RESPONSIVE - PAGE SPECIFIC */
+/* RESPONSIVE - 1100px - nav icon-ები ვმალავთ, ტექსტი რჩება */
+@media (max-width: 68.75rem) {
+  nav a img {
+    display: none;
+  }
+  nav a {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.82rem;
+  }
+}
+
+/*  RESPONSIVE - tablet (900px) - nav იმალება, burger ჩნდება
+   auth ღილაკები ყოველთვის ჩანს */
+@media (max-width: 56.25rem) {
+  nav {
+    display: none;
+  }
+  .burger {
+    display: flex;
+  }
+
+  /* header-actions ყოველთვის ჩანს - შესვლა/რეგ ჩათვლით */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  #guestBtns,
+  #userInfo {
+    display: flex !important;
+  }
+
+  /* section-ები */
+  .section {
+    padding: 2.5rem 1rem;
+  }
+
+  .products {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .reviews-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .booking-page {
+    padding: 2rem 1rem;
+  }
+
+  .reviews-page {
+    padding: 2rem 1rem;
+  }
+
+  .auth-container {
+    padding: 1.5rem;
+  }
+
+  .hero {
+    padding: 3.5rem 1.5rem 3rem;
+  }
+}
+
+/* RESPONSIVE - mobile (600px) */
+@media (max-width: 37.5rem) {
+  .header-inner {
+    padding: 0.6rem 1rem;
+  }
+
+  .logo span {
+    font-size: 1.3rem;
+  }
+
+  /* შესვლა ღილაკის ტექსტი პატარდება */
+  .btn-outline {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.78rem;
+  }
+
+  .btn-main {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    padding: 1.5rem 1rem;
+  }
+
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title {
+    font-size: 1.7rem;
+  }
+
+  .form-card {
+    padding: 1.25rem;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .auth-container {
+    padding: 1.25rem;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .not-found-num {
+    font-size: 5rem;
+  }
+
+  .modal {
+    padding: 1.5rem;
+  }
+
+  .search-wrap input {
+    width: 100%;
+  }
+
+  .dropdown {
+    width: 100%;
+  }
+}
+/* #endregion RESPONSIVE - PAGE SPECIFIC */
+
+/* #region CALENDAR */
+.calendar-wrap {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 60;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  min-width: 17rem;
+  transition: background 0.3s;
+}
+
+/* კლასი JS-ში toggle-ავს */
+.calendar-wrap.cal-open {
+  display: block;
+}
+/* #endregion CALENDAR */
+
+/* #region CALENDAR LAYOUT */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.cal-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.cal-nav {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.cal-nav:hover {
+  background: var(--border);
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.15rem;
+}
+
+.cal-day-name {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-light);
+  padding: 0.25rem 0;
+}
+
+.cal-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  border-radius: 0.35rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.15s;
+}
+
+.cal-cell:hover:not(:disabled):not(.past) {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--blue);
+}
+
+.cal-cell.today {
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.cal-cell.selected {
+  background: var(--blue);
+  color: white;
+  font-weight: 700;
+}
+
+.cal-cell.past {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.cal-cell.empty {
+  cursor: default;
+}
+/* #endregion CALENDAR LAYOUT */
+
+/* #region ACCORDION */
+.accordion-section {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+  transition: background 0.3s;
+}
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+.accordion-header:hover {
+  background: rgba(37, 99, 235, 0.04);
+}
+.accordion-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+[data-theme="dark"] .accordion-title {
+  color: var(--accent);
+}
+.accordion-title img {
+  width: 1.2rem;
+  height: 1.2rem;
+  opacity: 0.6;
+}
+[data-theme="dark"] .accordion-title img {
+  filter: brightness(0) invert(1);
+}
+.accordion-arrow {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--text-light);
+  transition:
+    transform 0.3s,
+    background 0.2s;
+  flex-shrink: 0;
+}
+.accordion-section.open .accordion-arrow {
+  transform: rotate(180deg);
+  background: var(--blue);
+  color: white;
+}
+.accordion-body {
+  display: none;
+  padding: 0 1.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.accordion-section.open .accordion-body {
+  display: block;
+}
+.accordion-body .search-wrap {
+  padding-top: 1rem;
+}
+/* #endregion ACCORDION */
+
+/* #region HERO STATS */
+/* Hero stats */
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat-num {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  display: block;
+}
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+/* #endregion HERO STATS */
