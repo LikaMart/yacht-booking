@@ -1,372 +1,752 @@
-// --- Stations ---
+// ============================================================
+// BASE URL - ერთ ადგილას, მარტივად შეიცვლება
+// ============================================================
+const BASE_URL = "https://railway.stepprojects.ge/api";
+const AUTH_URL = "https://rentcar.stepprojects.ge/api"; // auth API
+
+// ============================================================
+// THEME TOGGLE - dark / light
+// ============================================================
+const themeBtn = document.getElementById("themeToggleBtn");
+const themeIcon = document.getElementById("themeIcon");
+const htmlEl = document.documentElement; // <html> ელემენტი
+
+// localStorage-დან ვკითხულობთ შენახულ theme-ს (თუ მომხმარებელი ადრე ირჩია)
+const savedTheme = localStorage.getItem("theme") || "light";
+htmlEl.setAttribute("data-theme", savedTheme);
+themeIcon.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+
+themeBtn.addEventListener("click", () => {
+  // მიმდინარე theme-ს ვიღებთ და ვაბრუნებთ
+  const current = htmlEl.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+
+  htmlEl.setAttribute("data-theme", next); // html ატრიბუტი - CSS იყენებს
+  themeIcon.textContent = next === "dark" ? "☀️" : "🌙";
+  localStorage.setItem("theme", next); // ვინახავთ - გვახსოვს გადატვირთვისას
+});
+
+// ============================================================
+// BURGER MENU - მობილური ნავიგაცია
+// ============================================================
+const burgerBtn = document.getElementById("burgerBtn");
+const mobileNav = document.getElementById("mobileNav");
+
+burgerBtn.addEventListener("click", () => {
+  mobileNav.classList.toggle("open"); // .open კლასი CSS-ში display:flex-ს ამატებს
+});
+
+// მობილური ლინკზე კლიკი - მენიუ იხურება
+document.querySelectorAll(".mob-link").forEach((link) => {
+  link.addEventListener("click", () => mobileNav.classList.remove("open"));
+});
+
+// ============================================================
+// AUTH MODAL - modal-ის გახსნა/დახურვა
+// ============================================================
+const authModal = document.getElementById("authModal");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const openLoginBtn = document.getElementById("openLoginBtn");
+const openRegBtn = document.getElementById("openRegisterBtn");
+const tabLogin = document.getElementById("tabLogin");
+const tabRegister = document.getElementById("tabRegister");
+const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+
+// modal გახსნის ფუნქცია - რომელი ტაბი გამოჩნდეს
+function openModal(tab = "login") {
+  authModal.classList.remove("hidden");
+  document.body.style.overflow = "hidden"; // სქროლი block-ავს modal ღიაა
+  showTab(tab);
+}
+
+function closeModal() {
+  authModal.classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+// ტაბ გადამრთველი
+function showTab(tab) {
+  if (tab === "login") {
+    loginForm.classList.remove("hidden");
+    registerForm.classList.add("hidden");
+    tabLogin.classList.add("active");
+    tabRegister.classList.remove("active");
+  } else {
+    registerForm.classList.remove("hidden");
+    loginForm.classList.add("hidden");
+    tabRegister.classList.add("active");
+    tabLogin.classList.remove("active");
+  }
+}
+
+openLoginBtn.addEventListener("click", () => openModal("login"));
+openRegBtn && openRegBtn.addEventListener("click", () => openModal("register"));
+closeModalBtn.addEventListener("click", closeModal);
+tabLogin.addEventListener("click", () => showTab("login"));
+tabRegister.addEventListener("click", () => showTab("register"));
+
+// overlay-ზე კლიკი - modal იხურება
+authModal.addEventListener("click", (e) => {
+  if (e.target === authModal) closeModal();
+});
+
+// ============================================================
+// AUTH STATE - logged in / guest UI
+// ============================================================
+const guestBtns = document.getElementById("guestBtns");
+const userInfo = document.getElementById("userInfo");
+const welcomeMsg = document.getElementById("welcomeMsg");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// localStorage-ში თუ token შენახულია - შესულ მდგომარეობაში ვართ
+function checkAuthState() {
+  const token = localStorage.getItem("authToken");
+  const name = localStorage.getItem("userName");
+
+  if (token) {
+    // შესული ვართ - user info ვაჩვენებთ
+    guestBtns.classList.add("hidden");
+    userInfo.classList.remove("hidden");
+    welcomeMsg.textContent = `${name || "მომხმარებელი"}`;
+  } else {
+    // სტუმარი ვართ
+    guestBtns.classList.remove("hidden");
+    userInfo.classList.add("hidden");
+  }
+}
+
+// გასვლა - token-ს ვშლით
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userName");
+  checkAuthState();
+});
+
+// პირველადი შემოწმება
+checkAuthState();
+
+// ============================================================
+// REGISTER - POST /api/Users/register
+// body: { firstName, lastName, email, phoneNumber, password, role }
+// ============================================================
+document
+  .getElementById("registerSubmitBtn")
+  .addEventListener("click", async () => {
+    const msgEl = document.getElementById("registerMsg");
+    const firstName = document.getElementById("reg-name").value.trim();
+    const lastName = document.getElementById("reg-surname").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const password = document.getElementById("reg-password").value.trim();
+
+    if (!firstName || !lastName || !email || !password) {
+      showMsg(msgEl, "❌ ყველა ველი შეავსეთ", "error");
+      return;
+    }
+
+    if (password.length < 6) {
+      showMsg(msgEl, "❌ პაროლი მინ. 6 სიმბოლო", "error");
+      return;
+    }
+
+    try {
+      const resp = await fetch(`${AUTH_URL}/Users/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+          phoneNumber: "",
+          role: "User",
+        }),
+      });
+
+      // API text/plain აბრუნებს, არა JSON
+      const text = await resp.text();
+
+      if (resp.ok) {
+        showMsg(msgEl, "რეგისტრაცია წარმატებულია! შედით ანგარიშში.", "success");
+        setTimeout(() => showTab("login"), 1500);
+      } else {
+        showMsg(msgEl, `❌ ${text || "შეცდომა, სცადეთ თავიდან"}`, "error");
+      }
+    } catch (err) {
+      showMsg(msgEl, `❌ კავშირის შეცდომა: ${err.message}`, "error");
+    }
+  });
+
+// ============================================================
+// LOGIN - POST /api/Users/login
+// body: { email, password, phoneNumber, firstName, lastName, role }
+// response: { token, firstName, lastName, email, phoneNumber, role }
+// ============================================================
+document
+  .getElementById("loginSubmitBtn")
+  .addEventListener("click", async () => {
+    const msgEl = document.getElementById("loginMsg");
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+
+    if (!email || !password) {
+      showMsg(msgEl, "❌ ელ-ფოსტა და პაროლი შეავსეთ", "error");
+      return;
+    }
+
+    try {
+      const resp = await fetch(`${AUTH_URL}/Users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          phoneNumber: "",
+          firstName: "",
+          lastName: "",
+          role: "",
+        }),
+      });
+
+      const data = await resp.json();
+
+      if (resp.ok) {
+        // token და სახელი ვინახავთ localStorage-ში
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("userName", data.firstName || email.split("@")[0]);
+
+        showMsg(msgEl, "წარმატებით შეხვედით!", "success");
+
+        setTimeout(() => {
+          closeModal();
+          checkAuthState();
+        }, 1000);
+      } else {
+        showMsg(
+          msgEl,
+          `❌ ${data.message || "არასწორი ელ-ფოსტა ან პაროლი"}`,
+          "error",
+        );
+      }
+    } catch (err) {
+      showMsg(msgEl, `❌ კავშირის შეცდომა: ${err.message}`, "error");
+    }
+  });
+
+// ============================================================
+// STATIONS - GET
+// ============================================================
+
+// სადგურების card-ებად ჩვენება
 function showStations(list) {
-  const stationsDiv = document.querySelector(".stations");
-  stationsDiv.innerHTML = "";
+  const div = document.querySelector(".stations");
+  div.innerHTML = "";
+
   if (!list || list.length === 0) {
-    stationsDiv.innerHTML = "<p>No stations found</p>";
+    div.innerHTML = "<p>სადგური ვერ მოიძებნა</p>";
     return;
   }
+
   list.forEach((station) => {
     const card = document.createElement("div");
     card.classList.add("card");
-
-    const stationName = document.createElement("h3");
-    stationName.textContent = station.name;
-
-    const stationNumber = document.createElement("p");
-    stationNumber.textContent = `Station Number: ${station.stationNumber}`;
-
-    card.append(stationName, stationNumber);
-    stationsDiv.appendChild(card);
+    card.innerHTML = `
+      <h3>${station.name}</h3>
+      <p>სადგური №${station.stationNumber}</p>
+    `;
+    div.appendChild(card);
   });
 }
 
-fetch("https://railway.stepprojects.ge/api/stations")
-  .then((resp) => resp.json())
-  .then((data) => showStations(data))
-  .catch((err) => {
+// GET სადგურები
+async function getStations() {
+  try {
+    const resp = await fetch(`${BASE_URL}/stations`);
+    const data = await resp.json();
+    showStations(data);
+  } catch (err) {
     document.querySelector(".stations").innerHTML =
-      `<p style="color:red;">Failed to load stations: ${err.message}</p>`;
-  });
+      `<p style="color:red;">შეცდომა: ${err.message}</p>`;
+  }
+}
 
-  const stationInput = document.getElementById("stationFilter");
+getStations();
+
+// სადგურების dropdown ძებნა
+const stationInput = document.getElementById("stationFilter");
 const stationDropdown = document.getElementById("stationDropdown");
 
-stationInput.addEventListener("input", () => {
-  const keyword = stationInput.value.trim();
-  if (keyword.length < 2) {
+stationInput.addEventListener("input", async () => {
+  const kw = stationInput.value.trim().toLowerCase();
+
+  if (kw.length < 2) {
     stationDropdown.style.display = "none";
     return;
   }
 
-  fetch("https://railway.stepprojects.ge/api/stations")
-    .then((resp) => resp.json())
-    .then((data) => {
-      stationDropdown.innerHTML = "";
-      const filtered = data.filter(st => st.name.includes(keyword));
-      if (filtered.length === 0) {
-        stationDropdown.style.display = "none";
-        return;
-      }
-      filtered.forEach((station) => {
-        const option = document.createElement("p");
-        option.textContent = `${station.name} (№${station.stationNumber})`;
-        option.addEventListener("click", () => {
-          showStations([station]); // არჩეული station card‑ად გამოჩნდება
-          stationDropdown.style.display = "none";
-          stationInput.value = option.textContent;
-        });
-        stationDropdown.appendChild(option);
-      });
-      stationDropdown.style.display = "block";
-    })
-    .catch((err) => {
-      console.error("Station dropdown error:", err);
+  try {
+    const resp = await fetch(`${BASE_URL}/stations`);
+    const data = await resp.json();
+
+    const filtered = data.filter((s) => s.name.toLowerCase().includes(kw));
+    stationDropdown.innerHTML = "";
+
+    if (!filtered.length) {
       stationDropdown.style.display = "none";
+      return;
+    }
+
+    filtered.forEach((station) => {
+      const opt = document.createElement("p");
+      opt.textContent = `${station.name} (№${station.stationNumber})`;
+      opt.addEventListener("click", () => {
+        showStations([station]);
+        stationInput.value = station.name;
+        stationDropdown.style.display = "none";
+      });
+      stationDropdown.appendChild(opt);
     });
+
+    stationDropdown.style.display = "block";
+  } catch {
+    stationDropdown.style.display = "none";
+  }
 });
 
+// ============================================================
+// DEPARTURES - GET
+// ============================================================
 
-// --- Departures ---
+// გამგზავრებების ჩვენება
 function showDepartures(list) {
-  const departuresDiv = document.querySelector(".departures");
-  departuresDiv.innerHTML = "";
+  const div = document.querySelector(".departures");
+  div.innerHTML = "";
+
   if (!list || list.length === 0) {
-    departuresDiv.innerHTML = "<p>No departures found</p>";
+    div.innerHTML = "<p>გამგზავრება ვერ მოიძებნა</p>";
     return;
   }
 
-  list.forEach((departure) => {
-    // მთავარი ინფორმაცია (source, destination, date)
-    const depHeader = document.createElement("div");
-    depHeader.classList.add("card");
-    depHeader.innerHTML = `
-      <h3>${departure.source} → ${departure.destination}</h3>
-      <p>Date: ${departure.date}</p>
+  list.forEach((dep) => {
+    // სათაური
+    const depCard = document.createElement("div");
+    depCard.classList.add("card");
+    depCard.innerHTML = `
+      <h3>${dep.source} → ${dep.destination}</h3>
+      <p>${dep.date}</p>
     `;
-    departuresDiv.appendChild(depHeader);
+    div.appendChild(depCard);
 
-    // შიგნით არსებული მატარებლები
-    if (departure.trains && departure.trains.length > 0) {
-      departure.trains.forEach((train) => {
-        const trainCard = document.createElement("div");
-        trainCard.classList.add("card", "trainCard");
-        trainCard.innerHTML = `
-          <h4>Train #${train.number} - ${train.name}</h4>
-          <p>From ${train.from} → ${train.to}</p>
-          <p>Departure: ${train.departure} | Arrive: ${train.arrive}</p>
+    // ამ გამგზავრების მატარებლები - ქვე-ბარათებად
+    if (dep.trains?.length) {
+      dep.trains.forEach((train) => {
+        const tCard = document.createElement("div");
+        tCard.classList.add("card", "trainCard");
+        tCard.innerHTML = `
+          <h4>მატ. #${train.number} — ${train.name}</h4>
+          <p>გამგზ: ${train.departure} | ჩამ: ${train.arrive}</p>
         `;
-        departuresDiv.appendChild(trainCard);
+        div.appendChild(tCard);
       });
     }
   });
 }
-fetch("https://railway.stepprojects.ge/api/departures")
-  .then((resp) => resp.json())
-  .then((data) => showDepartures(data))
-  .catch((err) => {
+
+// GET გამგზავრებები
+async function getDepartures() {
+  try {
+    const resp = await fetch(`${BASE_URL}/departures`);
+    const data = await resp.json();
+    showDepartures(data);
+  } catch (err) {
     document.querySelector(".departures").innerHTML =
-      `<p style="color:red;">Failed to load departures: ${err.message}</p>`;
-  });
+      `<p style="color:red;">შეცდომა: ${err.message}</p>`;
+  }
+}
 
-  // --- Dropdown for Departures ---
-const departureInput = document.getElementById("departureFilter");
-const departureDropdown = document.getElementById("departureDropdown");
+getDepartures();
 
-departureInput.addEventListener("input", () => {
-  const keyword = departureInput.value.trim();
-  if (keyword.length < 2) {
-    departureDropdown.style.display = "none";
+// Dropdown ძებნა
+const depInput = document.getElementById("departureFilter");
+const depDropdown = document.getElementById("departureDropdown");
+
+depInput.addEventListener("input", async () => {
+  const kw = depInput.value.trim().toLowerCase();
+  if (kw.length < 2) {
+    depDropdown.style.display = "none";
     return;
   }
 
-  fetch(`https://railway.stepprojects.ge/api/departures?destination=${keyword}`)
-    .then((resp) => resp.json())
-    .then((data) => {
-      departureDropdown.innerHTML = "";
-      if (!data || data.length === 0) {
-        departureDropdown.style.display = "none";
-        return;
-      }
-      data.forEach((dep) => {
-        const option = document.createElement("p");
-        option.textContent = `${dep.source} → ${dep.destination} (${dep.date})`;
-        option.addEventListener("click", () => {
-          showDepartures([dep]); // არჩეული მონაცემის card‑ად ჩვენება
-          departureDropdown.style.display = "none";
-          departureInput.value = option.textContent;
-        });
-        departureDropdown.appendChild(option);
+  try {
+    const resp = await fetch(`${BASE_URL}/departures`);
+    const data = await resp.json();
+    const filtered = data.filter((d) =>
+      d.destination.toLowerCase().includes(kw),
+    );
+
+    depDropdown.innerHTML = "";
+    if (!filtered.length) {
+      depDropdown.style.display = "none";
+      return;
+    }
+
+    filtered.forEach((dep) => {
+      const opt = document.createElement("p");
+      opt.textContent = `${dep.source} → ${dep.destination} (${dep.date})`;
+      opt.addEventListener("click", () => {
+        showDepartures([dep]);
+        depInput.value = opt.textContent;
+        depDropdown.style.display = "none";
       });
-      departureDropdown.style.display = "block";
-    })
-    .catch((err) => {
-      console.error("Dropdown error:", err);
-      departureDropdown.style.display = "none";
+      depDropdown.appendChild(opt);
     });
+
+    depDropdown.style.display = "block";
+  } catch {
+    depDropdown.style.display = "none";
+  }
 });
 
-document.getElementById("filterDepartureBtn").addEventListener("click", () => {
-  const keyword = document.getElementById("departureFilter").value.trim();
-  fetch(`https://railway.stepprojects.ge/api/departures?destination=${keyword}`)
-    .then((resp) => resp.json())
-    .then((data) => showDepartures(data))
-    .catch((err) => {
+// ფილტრის ღილაკი (search.png icon)
+document
+  .getElementById("filterDepartureBtn")
+  .addEventListener("click", async () => {
+    const kw = depInput.value.trim().toLowerCase();
+    try {
+      const resp = await fetch(`${BASE_URL}/departures`);
+      const data = await resp.json();
+      const filtered = kw
+        ? data.filter((d) => d.destination.toLowerCase().includes(kw))
+        : data;
+      showDepartures(filtered);
+      depDropdown.style.display = "none";
+    } catch (err) {
       document.querySelector(".departures").innerHTML =
-        `<p style="color:red;">Failed to filter departures: ${err.message}</p>`;
-    });
-});
+        `<p style="color:red;">შეცდომა: ${err.message}</p>`;
+    }
+  });
 
+// ============================================================
+// TICKETS - GET
+// ============================================================
 
-
-
-
-
-
-
-// --- Tickets ---
+// ბილეთების ჩვენება
 function showTickets(list) {
-  const ticketsDiv = document.querySelector(".tickets");
-  ticketsDiv.innerHTML = "";
+  const div = document.querySelector(".tickets");
+  div.innerHTML = "";
+
   if (!list || list.length === 0) {
-    ticketsDiv.innerHTML = "<p>No tickets found</p>";
+    div.innerHTML = "<p>ბილეთი ვერ მოიძებნა</p>";
     return;
   }
 
   list.forEach((ticket) => {
     const card = document.createElement("div");
     card.classList.add("card");
+    card.innerHTML = `
+      <h3>ბილეთი #${ticket.id}</h3>
+      <p>${ticket.ticketPrice} ₾ | ${ticket.date} | ${ticket.confirmed ? "დადასტ." : "მოლოდ."}</p>
+      <p>${ticket.email || "—"} | ${ticket.phone || "—"}</p>
+    `;
 
-    // Ticket info
-    const ticketId = document.createElement("h3");
-    ticketId.textContent = `Ticket #${ticket.id}`;
-
-    const ticketInfo = document.createElement("p");
-    ticketInfo.textContent = `Price: ${ticket.ticketPrice} ₾ | Date: ${ticket.date} | Confirmed: ${ticket.confirmed}`;
-
-    const contactInfo = document.createElement("p");
-    contactInfo.textContent = `Email: ${ticket.email || "N/A"} | Phone: ${ticket.phone || "N/A"}`;
-
-    // Train info
-    const trainInfo = document.createElement("p");
-    trainInfo.textContent = `Train #${ticket.train.number} - ${ticket.train.name} | From ${ticket.train.from} → ${ticket.train.to} | Departure: ${ticket.train.departure} | Arrive: ${ticket.train.arrive}`;
-
-    card.append(ticketId, ticketInfo, contactInfo, trainInfo);
-
-    // Persons info
-    if (ticket.persons && ticket.persons.length > 0) {
-      ticket.persons.forEach((person) => {
-        const personInfo = document.createElement("p");
-        personInfo.textContent = `Passenger: ${person.name || "N/A"} ${person.surname || ""} | Seat: ${person.seat.number} | Seat Price: ${person.seat.price} ₾ | Status: ${person.status}`;
-        card.appendChild(personInfo);
-      });
+    // მატარებლის ინფო (optional chaining - თუ არ არსებობს, არ გამოჩნდება)
+    if (ticket.train) {
+      const tp = document.createElement("p");
+      tp.textContent = `#${ticket.train.number} | ${ticket.train.from} → ${ticket.train.to} | ${ticket.train.departure}`;
+      card.appendChild(tp);
     }
 
-    ticketsDiv.appendChild(card);
+    // მგზავრები
+    ticket.persons?.forEach((person) => {
+      const pp = document.createElement("p");
+      pp.textContent = `${person.name || "—"} ${person.surname || ""} | ადგ: ${person.seat?.number} | ${person.seat?.price} ₾`;
+      card.appendChild(pp);
+    });
+
+    div.appendChild(card);
   });
 }
 
-fetch("https://railway.stepprojects.ge/api/tickets")
-  .then((resp) => resp.json())
-  .then((data) => showTickets(data))
-  .catch((err) => {
+// GET ბილეთები
+async function getTickets() {
+  try {
+    const resp = await fetch(`${BASE_URL}/tickets`);
+    const data = await resp.json();
+    showTickets(data);
+  } catch (err) {
     document.querySelector(".tickets").innerHTML =
-      `<p style="color:red;">Failed to load tickets: ${err.message}</p>`;
-  });
+      `<p style="color:red;">შეცდომა: ${err.message}</p>`;
+  }
+}
 
-  const ticketsInput = document.createElement("input");
-ticketsInput.id = "ticketFilter";
-ticketsInput.placeholder = "Search ticket by email...";
-document.querySelector(".tickets").before(ticketsInput);
+getTickets();
 
-const ticketsDropdown = document.createElement("div");
-ticketsDropdown.id = "ticketsDropdown";
-ticketsDropdown.classList.add("dropdown");
-document.querySelector(".tickets").before(ticketsDropdown);
+// ბილეთების dropdown - ელ-ფოსტით
+const ticketInput = document.getElementById("ticketFilter");
+const ticketDropdown = document.getElementById("ticketsDropdown");
 
-ticketsInput.addEventListener("input", () => {
-  const keyword = ticketsInput.value.trim();
-  if (keyword.length < 2) {
-    ticketsDropdown.style.display = "none";
+ticketInput.addEventListener("input", async () => {
+  const kw = ticketInput.value.trim();
+  if (kw.length < 2) {
+    ticketDropdown.style.display = "none";
     return;
   }
 
-  fetch("https://railway.stepprojects.ge/api/tickets")
-    .then((resp) => resp.json())
-    .then((data) => {
-      ticketsDropdown.innerHTML = "";
-      const filtered = data.filter(ticket => ticket.email && ticket.email.includes(keyword));
-      if (filtered.length === 0) {
-        ticketsDropdown.style.display = "none";
-        return;
-      }
-      filtered.forEach((ticket) => {
-        const option = document.createElement("p");
-        option.textContent = `Ticket #${ticket.id} | ${ticket.email}`;
-        option.addEventListener("click", () => {
-          showTickets([ticket]); // არჩეული ticket card‑ად გამოჩნდება
-          ticketsDropdown.style.display = "none";
-          ticketsInput.value = option.textContent;
-        });
-        ticketsDropdown.appendChild(option);
+  try {
+    const resp = await fetch(`${BASE_URL}/tickets`);
+    const data = await resp.json();
+    const filtered = data.filter((t) => t.email?.includes(kw));
+
+    ticketDropdown.innerHTML = "";
+    if (!filtered.length) {
+      ticketDropdown.style.display = "none";
+      return;
+    }
+
+    filtered.forEach((ticket) => {
+      const opt = document.createElement("p");
+      opt.textContent = `ბილეთი #${ticket.id} | ${ticket.email}`;
+      opt.addEventListener("click", () => {
+        showTickets([ticket]);
+        ticketInput.value = ticket.email;
+        ticketDropdown.style.display = "none";
       });
-      ticketsDropdown.style.display = "block";
-    })
-    .catch((err) => {
-      console.error("Tickets dropdown error:", err);
-      ticketsDropdown.style.display = "none";
+      ticketDropdown.appendChild(opt);
     });
+
+    ticketDropdown.style.display = "block";
+  } catch {
+    ticketDropdown.style.display = "none";
+  }
 });
 
-// --- Trains ---
-function showTrains(list) {
-  const trainsDiv = document.querySelector(".trains");
-  trainsDiv.innerHTML = "";
-  if (!list || list.length === 0) {
-    trainsDiv.innerHTML = "<p>No trains found</p>";
+// ============================================================
+// BOOKING FORM - cascade selects
+// მატარებელი → ვაგონი → ადგილი (UUID ავტომატურად)
+// ============================================================
+
+// 1. მატარებლების ჩატვირთვა select-ში
+async function loadTrainsSelect() {
+  const select = document.getElementById("f-trainId");
+  try {
+    const resp = await fetch(`${BASE_URL}/trains`);
+    const data = await resp.json();
+    // ყველა unique მატარებელი - სახელი + ID
+    data.forEach((train) => {
+      const opt = document.createElement("option");
+      opt.value = train.id;
+      opt.textContent = `#${train.number} ${train.name} (${train.date}) | ${train.departure}→${train.arrive}`;
+      select.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("მატარებლების ჩატვირთვა ვერ მოხერხდა:", err);
+  }
+}
+
+loadTrainsSelect();
+
+// 2. მატარებლის არჩევისას - ვაგონების ჩატვირთვა
+document.getElementById("f-trainId").addEventListener("change", async () => {
+  const trainId = document.getElementById("f-trainId").value;
+  const vagonSelect = document.getElementById("f-vagonId");
+  const seatSelect = document.getElementById("f-seatId");
+
+  // სეlect-ების გასუფთავება
+  vagonSelect.innerHTML = '<option value="">ვაგონი...</option>';
+  seatSelect.innerHTML = '<option value="">ჯერ ვაგონი აირჩიე</option>';
+  seatSelect.disabled = true;
+
+  if (!trainId) {
+    vagonSelect.disabled = true;
     return;
   }
 
-  list.forEach((train) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
+  try {
+    const resp = await fetch(`${BASE_URL}/trains/${trainId}`);
+    const train = await resp.json();
 
-    // Train info
-    const trainHeader = document.createElement("h3");
-    trainHeader.textContent = `Train #${train.number} - ${train.name}`;
-
-    const trainRoute = document.createElement("p");
-    trainRoute.textContent = `From ${train.from} → ${train.to}`;
-
-    const trainTime = document.createElement("p");
-    trainTime.textContent = `Departure: ${train.departure} | Arrive: ${train.arrive}`;
-
-    const trainDate = document.createElement("p");
-    trainDate.textContent = `Date: ${train.date}`;
-
-    card.append(trainHeader, trainRoute, trainTime, trainDate);
-
-    // Vagons info
     if (train.vagons && train.vagons.length > 0) {
       train.vagons.forEach((vagon) => {
-        const vagonInfo = document.createElement("p");
-        vagonInfo.textContent = `Vagon #${vagon.id} - ${vagon.name}`;
-        card.appendChild(vagonInfo);
+        const opt = document.createElement("option");
+        opt.value = vagon.id;
+        opt.textContent = `${vagon.name} (ID: ${vagon.id})`;
+        vagonSelect.appendChild(opt);
       });
+      vagonSelect.disabled = false;
     }
+  } catch (err) {
+    console.error("ვაგონების ჩატვირთვა ვერ მოხერხდა:", err);
+  }
+});
 
-    trainsDiv.appendChild(card);
-  });
-}
-fetch("https://railway.stepprojects.ge/api/trains")
-  .then((resp) => resp.json())
-  .then((data) => showTrains(data))
-  .catch((err) => {
-    document.querySelector(".trains").innerHTML =
-      `<p style="color:red;">Failed to load trains: ${err.message}</p>`;
-  });
+// 3. ვაგონის არჩევისას - ადგილების ჩატვირთვა (UUID-ებით)
+document.getElementById("f-vagonId").addEventListener("change", async () => {
+  const vagonId = document.getElementById("f-vagonId").value;
+  const seatSelect = document.getElementById("f-seatId");
 
-// --- Vagons ---
-function showVagons(list) {
-  const vagonsDiv = document.querySelector(".vagons");
-  vagonsDiv.innerHTML = "";
-  if (!list || list.length === 0) {
-    vagonsDiv.innerHTML = "<p>No vagons found</p>";
+  seatSelect.innerHTML = '<option value="">ადგილი...</option>';
+
+  if (!vagonId) {
+    seatSelect.disabled = true;
     return;
   }
-  list.forEach((vagon) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.innerHTML = `
-      <h3>Vagon #${vagon.id}</h3>
-      <p>Type: ${vagon.type || "N/A"} | Seats: ${vagon.seats || "N/A"}</p>
-    `;
-    vagonsDiv.appendChild(card);
+
+  try {
+    // getvagon/{id} - seat-ების UUID-ებს აბრუნებს
+    const resp = await fetch(`${BASE_URL}/getvagon/${vagonId}`);
+    const data = await resp.json();
+    const vagon = Array.isArray(data) ? data[0] : data;
+
+    if (vagon.seats && vagon.seats.length > 0) {
+      // მხოლოდ თავისუფალი ადგილები
+      const free = vagon.seats.filter((s) => !s.isOccupied);
+      free.forEach((seat) => {
+        const opt = document.createElement("option");
+        opt.value = seat.seatId; // UUID - სწორედ ეს მიდის API-ში
+        opt.textContent = `ადგილი ${seat.number} - ${seat.price}₾`;
+        seatSelect.appendChild(opt);
+      });
+      seatSelect.disabled = false;
+    } else {
+      seatSelect.innerHTML = '<option value="">ადგილი არ არის</option>';
+    }
+  } catch (err) {
+    console.error("ადგილების ჩატვირთვა ვერ მოხერხდა:", err);
+  }
+});
+
+// ============================================================
+// POST - ახალი ბილეთის რეგისტრაცია
+// endpoint: POST /api/tickets/register
+// body: { trainId, date, email, phoneNumber, people: [{ seatId, name, surname, idNumber, status, payoutCompleted }] }
+// ============================================================
+document.getElementById("postTicketBtn").addEventListener("click", async () => {
+  const msgEl = document.getElementById("bookingMsg");
+  const name = document.getElementById("f-name").value.trim();
+  const surname = document.getElementById("f-surname").value.trim();
+  const email = document.getElementById("f-email").value.trim();
+  const phone = document.getElementById("f-phone").value.trim();
+  const trainId = parseInt(document.getElementById("f-trainId").value);
+  const seatId = document.getElementById("f-seatId").value.trim();
+
+  if (!name || !surname || !email || !phone || !trainId || !seatId) {
+    showMsg(msgEl, "❌ ყველა ველი შეავსეთ", "error");
+    return;
+  }
+
+  try {
+    const resp = await fetch(`${BASE_URL}/tickets/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        trainId,
+        date: new Date().toISOString(), // დღევანდელი თარიღი
+        email,
+        phoneNumber: phone,
+        people: [
+          {
+            seatId, // UUID ფორმატი - vagon-ის seat-ის id
+            name,
+            surname,
+            idNumber: "", // პირადი ნომერი (optional)
+            status: "Active",
+            payoutCompleted: false,
+          },
+        ],
+      }),
+    });
+
+    // API text/plain-ს აბრუნებს
+    const text = await resp.text();
+
+    if (resp.ok) {
+      showMsg(msgEl, "ბილეთი წარმატებით დაჯავშნა!", "success");
+      getTickets();
+    } else {
+      showMsg(msgEl, `❌ ${text || resp.status}`, "error");
+    }
+  } catch (err) {
+    showMsg(msgEl, `❌ კავშირის შეცდომა: ${err.message}`, "error");
+  }
+});
+
+// ============================================================
+// PUT - ბილეთის განახლება
+// API-ში PUT /tickets/{id} არ არის, ამიტომ confirm endpoint-ს ვიყენებთ
+// სწორი endpoint: GET /api/tickets/confirm/{ticketId}
+// ============================================================
+document.getElementById("putTicketBtn").addEventListener("click", async () => {
+  const msgEl = document.getElementById("updateMsg");
+  const id = parseInt(document.getElementById("u-id").value);
+  const email = document.getElementById("u-email").value.trim();
+  const phone = document.getElementById("u-phone").value.trim();
+
+  if (!id) {
+    showMsg(msgEl, "❌ ბილეთის ID შეიყვანეთ", "error");
+    return;
+  }
+
+  try {
+    // API-ს confirm endpoint-ი ვიყენებთ (PUT API-ში არ არის)
+    const resp = await fetch(`${BASE_URL}/tickets/confirm/${id}`);
+    const data = await resp.json();
+
+    if (resp.ok) {
+      showMsg(msgEl, `ბილეთი #${id} განახლდა!`, "success");
+      getTickets();
+    } else {
+      showMsg(msgEl, `❌ ${data.message || resp.status}`, "error");
+    }
+  } catch (err) {
+    showMsg(msgEl, `❌ კავშირის შეცდომა: ${err.message}`, "error");
+  }
+});
+
+// ============================================================
+// DELETE - ბილეთის გაუქმება
+// სწორი endpoint: DELETE /api/tickets/cancel/{ticketId}
+// ============================================================
+document
+  .getElementById("deleteTicketBtn")
+  .addEventListener("click", async () => {
+    const msgEl = document.getElementById("deleteMsg");
+    const id = parseInt(document.getElementById("d-id").value);
+
+    if (!id) {
+      showMsg(msgEl, "❌ ID შეიყვანეთ", "error");
+      return;
+    }
+
+    if (!confirm(`ბილეთი #${id} გაუქმდება. გრძელდება?`)) return;
+
+    try {
+      const resp = await fetch(`${BASE_URL}/tickets/cancel/${id}`, {
+        method: "DELETE",
+      });
+      const data = await resp.json();
+
+      if (resp.ok) {
+        showMsg(msgEl, `ბილეთი #${id} გაუქმდა!`, "success");
+        getTickets();
+      } else {
+        showMsg(msgEl, `❌ ${data.message || resp.status}`, "error");
+      }
+    } catch (err) {
+      showMsg(msgEl, `❌ კავშირის შეცდომა: ${err.message}`, "error");
+    }
   });
+
+// ============================================================
+// HELPER - შეტყობინების ჩვენება
+// type: "success" ან "error"
+// 4 წამში ავტომატურად ქრება
+// ============================================================
+function showMsg(el, text, type) {
+  el.textContent = text;
+  el.className = `auth-msg ${type}`;
+  el.style.display = "block";
+
+  setTimeout(() => {
+    el.style.display = "none";
+  }, 4000);
 }
-
-fetch("https://railway.stepprojects.ge/api/vagons")
-  .then((resp) => resp.json())
-  .then((data) => showVagons(data))
-  .catch((err) => {
-    document.querySelector(".vagons").innerHTML =
-      `<p style="color:red;">Failed to load vagons: ${err.message}</p>`;
-  });
-
-// --- Seat Example ---
-function showSeat(seat) {
-  const seatDiv = document.querySelector(".seat");
-  seatDiv.innerHTML = `
-    <h3>Seat #${seat.id}</h3>
-    <p>Status: ${seat.status || "N/A"}</p>
-  `;
-}
-
-fetch("https://railway.stepprojects.ge/api/seat/1") // მაგალითი seatId=1
-  .then((resp) => resp.json())
-  .then((data) => showSeat(data))
-  .catch((err) => {
-    document.querySelector(".seat").innerHTML =
-      `<p style="color:red;">Failed to load seat: ${err.message}</p>`;
-  });
-
-// --- Ticket Status & Confirm Example ---
-function checkTicketStatus(ticketId) {
-  fetch(`https://railway.stepprojects.ge/api/tickets/checkstatus/${ticketId}`)
-    .then((resp) => resp.json())
-    .then((data) => {
-      alert(`Ticket ${ticketId} status: ${data.status}`);
-    })
-    .catch((err) => console.error("Status error:", err));
-}
-
-function confirmTicket(ticketId) {
-  fetch(`https://railway.stepprojects.ge/api/tickets/confirm/${ticketId}`)
-    .then((resp) => resp.json())
-    .then((data) => {
-      alert(`Ticket ${ticketId} confirmed: ${data.confirmation}`);
-    })
-    .catch((err) => console.error("Confirm error:", err));
-}
-
-
