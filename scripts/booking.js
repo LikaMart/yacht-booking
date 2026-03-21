@@ -116,9 +116,9 @@ document.getElementById("f-vagonId").addEventListener("change", async () => {
 
   // მხოლოდ ID ვინახავთ - fresh fetch გამოხსნაზე ხდება openSeatMap()-ში
   state.currentVagonId = vagonId;
-    document
-      .querySelectorAll(".choose-seat-btn")
-      .forEach((b) => (b.disabled = false));
+  document
+    .querySelectorAll(".choose-seat-btn")
+    .forEach((b) => (b.disabled = false));
 });
 
 // ============================================================

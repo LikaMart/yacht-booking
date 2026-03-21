@@ -73,7 +73,7 @@ if (logoutBtn) {
     localStorage.removeItem("userName");
     checkAuthState();
     if (!window.location.pathname.includes("login")) {
-    window.location.href = "../pages/index.html";
+      window.location.href = "../pages/index.html";
     }
   });
 }

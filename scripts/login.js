@@ -92,35 +92,35 @@ renderStorageInfo();
 // ============================================================
 document.getElementById("registerSubmitBtn").addEventListener("click", async () => {
   const msgEl    = document.getElementById("registerMsg");
-    const firstName = document.getElementById("reg-name").value.trim();
+  const firstName = document.getElementById("reg-name").value.trim();
   const lastName  = document.getElementById("reg-surname").value.trim();
   const email     = document.getElementById("reg-email").value.trim();
   const password  = document.getElementById("reg-password").value.trim();
 
-    if (!firstName || !lastName || !email || !password) {
+  if (!firstName || !lastName || !email || !password) {
     showMsg(msgEl, "ყველა ველი შეავსეთ", "error"); return;
-    }
-    if (password.length < 6) {
+  }
+  if (password.length < 6) {
     showMsg(msgEl, "პაროლი მინ. 6 სიმბოლო", "error"); return;
-    }
+  }
 
-    try {
-      const resp = await fetch(`${AUTH_URL}/Users/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+  try {
+    const resp = await fetch(`${AUTH_URL}/Users/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstName, lastName, email, password, phoneNumber: "", role: "User" }),
-      });
-      const text = await resp.text();
-      if (resp.ok) {
-        showMsg(msgEl, "რეგისტრაცია წარმატებულია! შედით ანგარიშში.", "success");
-        setTimeout(() => showTab("login"), 1500);
-      } else {
+    });
+    const text = await resp.text();
+    if (resp.ok) {
+      showMsg(msgEl, "რეგისტრაცია წარმატებულია! შედით ანგარიშში.", "success");
+      setTimeout(() => showTab("login"), 1500);
+    } else {
       showMsg(msgEl, text || "შეცდომა — სცადეთ თავიდან", "error");
-      }
-    } catch (err) {
-      showMsg(msgEl, `კავშირის შეცდომა: ${err.message}`, "error");
     }
-  });
+  } catch (err) {
+    showMsg(msgEl, `კავშირის შეცდომა: ${err.message}`, "error");
+  }
+});
 
 // ============================================================
 // LOGIN
@@ -128,30 +128,30 @@ document.getElementById("registerSubmitBtn").addEventListener("click", async () 
 document.getElementById("loginSubmitBtn").addEventListener("click", async () => {
   const msgEl   = document.getElementById("loginMsg");
   const email   = document.getElementById("login-email").value.trim();
-    const password = document.getElementById("login-password").value.trim();
+  const password = document.getElementById("login-password").value.trim();
 
-    if (!email || !password) {
+  if (!email || !password) {
     showMsg(msgEl, "ელ-ფოსტა და პაროლი შეავსეთ", "error"); return;
-    }
+  }
 
-    try {
-      const resp = await fetch(`${AUTH_URL}/Users/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+  try {
+    const resp = await fetch(`${AUTH_URL}/Users/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, phoneNumber: "", firstName: "", lastName: "", role: "" }),
-      });
-      const data = await resp.json();
+    });
+    const data = await resp.json();
 
-      if (resp.ok) {
-        localStorage.setItem("authToken", data.token);
-        localStorage.setItem("userName", data.firstName || email.split("@")[0]);
-        showMsg(msgEl, "წარმატებით შეხვედით!", "success");
+    if (resp.ok) {
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("userName", data.firstName || email.split("@")[0]);
+      showMsg(msgEl, "წარმატებით შეხვედით!", "success");
       renderStorageInfo(); // განაახლე storage panel-ი
       setTimeout(() => { window.location.href = "../pages/index.html"; }, 1200);
-      } else {
-        showMsg(msgEl, data.message || "არასწორი ელ-ფოსტა ან პაროლი", "error");
-      }
-    } catch (err) {
-      showMsg(msgEl, `კავშირის შეცდომა: ${err.message}`, "error");
+    } else {
+      showMsg(msgEl, data.message || "არასწორი ელ-ფოსტა ან პაროლი", "error");
     }
-  });
+  } catch (err) {
+    showMsg(msgEl, `კავშირის შეცდომა: ${err.message}`, "error");
+  }
+});
