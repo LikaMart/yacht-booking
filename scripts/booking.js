@@ -1,6 +1,6 @@
 // ============================================================
 // booking.js - ბილეთის დაჯავშნა
-// CASCADE: მატარებელი → ვაგონი → ადგილების სქემა
+// CASCADE: იახტა → გემბანი → ადგილების სქემა
 // ინვოისი sidebar-ში ავტომატურად განახლდება
 // ============================================================
 import { BASE_URL, showMsg } from "./theme.js";
@@ -9,9 +9,9 @@ import { BASE_URL, showMsg } from "./theme.js";
 // STATE - ყველა მდგომარეობა ერთ ობიექტში
 // ============================================================
 const state = {
-  trains: [], // ყველა მატარებელი
-  selectedTrain: null, // არჩეული მატარებელი (ობიექტი)
-  vagons: [], // მიმდინარე მატარებლის ვაგონები
+  trains: [], // ყველა იახტა
+  selectedTrain: null, // არჩეული იახტა
+  vagons: [], // გემბანები
   currentVagon: null, // მიმდინარე ვაგონი (seats-ით)
   passengers: [
     {
@@ -40,11 +40,11 @@ async function loadTrains() {
     state.trains.forEach((train) => {
       const opt = document.createElement("option");
       opt.value = train.id;
-      opt.textContent = `#${train.number} — ${train.name} | ${train.date} | ${train.departure}→${train.arrive}`;
+      opt.textContent = `⚓ #${train.number} — ${train.name} | ${train.date} | ${train.departure}→${train.arrive}`;
       select.appendChild(opt);
     });
   } catch (err) {
-    console.error("მატარებლები ვერ ჩაიტვირთა:", err);
+    console.error("იახტები ვერ ჩაიტვირთა:", err);
   }
 }
 
@@ -60,6 +60,7 @@ document.getElementById("f-trainId").addEventListener("change", async () => {
   vagonSelect.innerHTML = '<option value="">ვაგონი...</option>';
   vagonSelect.disabled = true;
   state.currentVagon = null;
+  state.currentVagonId = null;
   state.selectedTrain = null;
   document.getElementById("selectedTrainCard").classList.remove("show");
 
@@ -75,7 +76,7 @@ document.getElementById("f-trainId").addEventListener("change", async () => {
     const train = await resp.json();
     state.selectedTrain = train;
 
-    // მატარებლის info card
+    // იახტის info card
     document.getElementById("trainBadge").textContent = `#${train.number}`;
     document.getElementById("trainName").textContent = train.name;
     document.getElementById("trainDate").textContent = train.date;
@@ -106,24 +107,18 @@ document.getElementById("f-vagonId").addEventListener("change", async () => {
   const vagonId = document.getElementById("f-vagonId").value;
 
   state.currentVagon = null;
+  state.currentVagonId = null;
   document
     .querySelectorAll(".choose-seat-btn")
     .forEach((b) => (b.disabled = true));
 
   if (!vagonId) return;
 
-  try {
-    const resp = await fetch(`${BASE_URL}/getvagon/${vagonId}`);
-    const data = await resp.json();
-    state.currentVagon = Array.isArray(data) ? data[0] : data;
-
-    // ახლა "ადგილის არჩევა" ღილაკები ჩართდება
+  // მხოლოდ ID ვინახავთ - fresh fetch გამოხსნაზე ხდება openSeatMap()-ში
+  state.currentVagonId = vagonId;
     document
       .querySelectorAll(".choose-seat-btn")
       .forEach((b) => (b.disabled = false));
-  } catch (err) {
-    console.error("ადგილები ვერ ჩაიტვირთა:", err);
-  }
 });
 
 // ============================================================
@@ -249,12 +244,26 @@ document.addEventListener("click", (e) => {
   openSeatMap();
 });
 
-function openSeatMap() {
-  if (!state.currentVagon) return;
+async function openSeatMap() {
+  if (!state.currentVagonId) return;
+
+  // ყოველ გახსნაზე სახელმძღვ. fresh data - "already occupied" error-ის თავიდან ასაცილებლად
+  seatContainer.innerHTML = '<p style="padding:2rem;text-align:center;color:var(--text-light)">⏳ იტვირთება...</p>';
+  seatOverlay.classList.remove("hidden");
+
+  try {
+    const resp = await fetch(`${BASE_URL}/getvagon/${state.currentVagonId}`);
+    const data = await resp.json();
+    state.currentVagon = Array.isArray(data) ? data[0] : data;
+  } catch (err) {
+    seatContainer.innerHTML = `<p style="padding:2rem;color:var(--red)">შეცდომა: ${err.message}</p>`;
+    return;
+  }
+
   const vagon = state.currentVagon;
 
   document.getElementById("seatModalTitle").textContent =
-    `${vagon.name} — ვაგონი #${vagon.id}`;
+    `${vagon.name} — გემბანი #${vagon.id}`;
 
   // უკვე სხვა მგზავრებზე დარეზერვირებული ადგილები
   const takenIds = state.passengers
@@ -262,14 +271,12 @@ function openSeatMap() {
     .map((p) => p.seatId)
     .filter(Boolean);
 
-  // ადგილების ბადის აგება
-  // რიგები: 1A,1B | gap | 1C,1D
+  // ადგილების ბადის აგება: 1A,1B | gap | 1C,1D
   const rowCount =
     Math.max(...vagon.seats.map((s) => parseInt(s.number))) || 10;
-  const letters = ["A", "B", "C", "D"];
 
   let html = `<div class="vagon-shell">
-    <div class="vagon-toilet">🚿 Toilet</div>
+    <div class="vagon-toilet">⚓ შესასვლელი</div>
     <div class="seat-grid">`;
 
   for (let r = 1; r <= rowCount; r++) {
@@ -277,7 +284,6 @@ function openSeatMap() {
       const seat = vagon.seats.find((s) => s.number === `${r}${l}`);
       html += seatBtn(seat, takenIds);
     });
-    // დერეფანი
     html += `<div class="seat-aisle"></div>`;
     ["C", "D"].forEach((l) => {
       const seat = vagon.seats.find((s) => s.number === `${r}${l}`);
@@ -285,7 +291,7 @@ function openSeatMap() {
     });
   }
 
-  html += `</div><div class="vagon-toilet">🚿 Toilet</div></div>`;
+  html += `</div><div class="vagon-toilet">⚓ გასასვლელი</div></div>`;
   seatContainer.innerHTML = html;
 
   // კლიკი ადგილზე
@@ -300,7 +306,6 @@ function openSeatMap() {
       state.passengers[pIdx].seatLabel = seatLabel;
       state.passengers[pIdx].seatPrice = seatPrice;
 
-      // badge განახლება
       const badge = document.getElementById(`badge-${pIdx}`);
       if (badge) {
         badge.textContent = `ადგ. ${seatLabel}`;
@@ -311,8 +316,6 @@ function openSeatMap() {
       seatOverlay.classList.add("hidden");
     });
   });
-
-  seatOverlay.classList.remove("hidden");
 }
 
 // ადგილის ღილაკი HTML

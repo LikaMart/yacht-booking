@@ -337,13 +337,13 @@ function showDepartures(list) {
     `;
     div.appendChild(depCard);
 
-    // ამ გამგზავრების მატარებლები - ქვე-ბარათებად
+    // ამ გამგზავრების იახტები - ქვე-ბარათებად
     if (dep.trains?.length) {
       dep.trains.forEach((train) => {
         const tCard = document.createElement("div");
         tCard.classList.add("card", "trainCard");
         tCard.innerHTML = `
-          <h4>მატ. #${train.number} — ${train.name}</h4>
+          <h4>იახტა #${train.number} — ${train.name}</h4>
           <p>გამგზ: ${train.departure} | ჩამ: ${train.arrive}</p>
         `;
         div.appendChild(tCard);
@@ -449,7 +449,7 @@ function showTickets(list) {
       <p>${ticket.email || "—"} | ${ticket.phone || "—"}</p>
     `;
 
-    // მატარებლის ინფო (optional chaining - თუ არ არსებობს, არ გამოჩნდება)
+    // იახტის ინფო (optional chaining - თუ არ არსებობს, არ გამოჩნდება)
     if (ticket.train) {
       const tp = document.createElement("p");
       tp.textContent = `#${ticket.train.number} | ${ticket.train.from} → ${ticket.train.to} | ${ticket.train.departure}`;
@@ -522,16 +522,16 @@ ticketInput.addEventListener("input", async () => {
 
 // ============================================================
 // BOOKING FORM - cascade selects
-// მატარებელი → ვაგონი → ადგილი (UUID ავტომატურად)
+// იახტა → გემბანი → ადგილი (UUID ავტომატურად)
 // ============================================================
 
-// 1. მატარებლების ჩატვირთვა select-ში
+// 1. იახტების ჩატვირთვა select-ში
 async function loadTrainsSelect() {
   const select = document.getElementById("f-trainId");
   try {
     const resp = await fetch(`${BASE_URL}/trains`);
     const data = await resp.json();
-    // ყველა unique მატარებელი - სახელი + ID
+    // ყველა unique იახტა - სახელი + ID
     data.forEach((train) => {
       const opt = document.createElement("option");
       opt.value = train.id;
@@ -539,21 +539,21 @@ async function loadTrainsSelect() {
       select.appendChild(opt);
     });
   } catch (err) {
-    console.error("მატარებლების ჩატვირთვა ვერ მოხერხდა:", err);
+    console.error("იახტების ჩატვირთვა ვერ მოხერხდა:", err);
   }
 }
 
 loadTrainsSelect();
 
-// 2. მატარებლის არჩევისას - ვაგონების ჩატვირთვა
+// 2. იახტის არჩევისას - გემბანის ჩატვირთვა
 document.getElementById("f-trainId").addEventListener("change", async () => {
   const trainId = document.getElementById("f-trainId").value;
   const vagonSelect = document.getElementById("f-vagonId");
   const seatSelect = document.getElementById("f-seatId");
 
   // სეlect-ების გასუფთავება
-  vagonSelect.innerHTML = '<option value="">ვაგონი...</option>';
-  seatSelect.innerHTML = '<option value="">ჯერ ვაგონი აირჩიე</option>';
+  vagonSelect.innerHTML = '<option value="">გემბანი...</option>';
+  seatSelect.innerHTML = '<option value="">ჯერ გემბანი აირჩიე</option>';
   seatSelect.disabled = true;
 
   if (!trainId) {

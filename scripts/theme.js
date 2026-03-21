@@ -35,7 +35,7 @@ document.querySelectorAll(".mob-link").forEach((link) => {
   link.addEventListener("click", () => mobileNav.classList.remove("open"));
 });
 
-// --- AUTH STATE (გვერდებზე სადაც userInfo/guestBtns არის) ---
+// --- AUTH STATE ---
 function checkAuthState() {
   const token = localStorage.getItem("authToken");
   const name = localStorage.getItem("userName");
@@ -43,15 +43,24 @@ function checkAuthState() {
   const guestBtns = document.getElementById("guestBtns");
   const welcomeMsg = document.getElementById("welcomeMsg");
 
-  if (!userInfo) return; // 404 გვერდზე არ არის
+  if (!userInfo) return;
 
   if (token) {
+    // inline style override to beat the .hidden !important rule
+    userInfo.style.display = "flex";
     userInfo.classList.remove("hidden");
-    if (guestBtns) guestBtns.classList.add("hidden");
+    if (guestBtns) {
+      guestBtns.style.display = "none";
+      guestBtns.classList.add("hidden");
+    }
     if (welcomeMsg) welcomeMsg.textContent = name || "მომხმარებელი";
   } else {
+    userInfo.style.display = "none";
     userInfo.classList.add("hidden");
-    if (guestBtns) guestBtns.classList.remove("hidden");
+    if (guestBtns) {
+      guestBtns.style.display = "flex";
+      guestBtns.classList.remove("hidden");
+    }
   }
 }
 
@@ -62,14 +71,17 @@ if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userName");
+    checkAuthState();
+    if (!window.location.pathname.includes("login")) {
     window.location.href = "../pages/index.html";
+    }
   });
 }
 
 // --- HELPER: შეტყობინება ---
 function showMsg(el, text, type) {
   el.textContent = text;
-  el.className = `auth-msg ${type}`;
+  el.className = "auth-msg " + type;
   el.style.display = "block";
   setTimeout(() => {
     el.style.display = "none";

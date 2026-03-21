@@ -9,6 +9,74 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/style.css" />
+    <style>
+      .auth-page {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .token-info-wrap {
+        width: 100%;
+        max-width: 28rem;
+        margin: 0 auto;
+      }
+      .token-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        padding: 1.25rem 1.5rem;
+        box-shadow: var(--shadow);
+        transition: background 0.3s;
+      }
+      .token-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-light);
+        margin-bottom: 0.75rem;
+      }
+      .token-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.84rem;
+      }
+      .token-row:last-child {
+        border-bottom: none;
+      }
+      .token-label {
+        font-weight: 700;
+        color: var(--text-light);
+        flex-shrink: 0;
+      }
+      .token-value {
+        color: var(--text);
+        word-break: break-all;
+        text-align: right;
+      }
+      .token-mono {
+        font-family: monospace;
+        font-size: 0.76rem;
+        color: var(--blue);
+      }
+      .token-status-in {
+        color: #059669;
+        font-weight: 700;
+      }
+      .token-status-out {
+        color: var(--text-light);
+      }
+      /* Fix form spacing */
+      .auth-form-page .form-group {
+        margin-bottom: 0.85rem;
+      }
+      .auth-form-page .btn-main.full-width {
+        margin-top: 0.25rem;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -18,19 +86,52 @@
           <span>yacht booking</span>
         </a>
                 <nav id="mainNav">
-          <a href="../pages/index.html"><img src="../assets/icons/home.png" alt="" />მთავარი</a>
-          <a href="../pages/index.html#stations"><img src="../assets/icons/location-dot-solid.png" alt="" />სადგურები</a>
-          <a href="../pages/index.html#departures"><img src="../assets/icons/calendar-solid.png" alt="" />გამგზავრებები</a>
-          <a href="../pages/booking.html"><img src="../assets/icons/cart.png" alt="" />დაჯავშნა</a>
-          <a href="../pages/gallery.html"><img src="../assets/icons/calendar-solid.png" alt="" />გალერეა</a>
-          <a href="../pages/reviews.html"><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a>
+          <a href="../pages/index.html"
+            ><img src="../assets/icons/home.png" alt="" />მთავარი</a
+          >
+          <a href="../pages/index.html#stations"
+            ><img
+              src="../assets/icons/location-dot-solid.png"
+              alt=""
+            />სადგურები</a
+          >
+          <a href="../pages/index.html#departures"
+            ><img
+              src="../assets/icons/calendar-solid.png"
+              alt=""
+            />გამგზავრებები</a
+          >
+          <a href="../pages/booking.html"
+            ><img src="../assets/icons/cart.png" alt="" />დაჯავშნა</a
+          >
+          <a href="../pages/gallery.html"
+            ><img src="../assets/icons/calendar-solid.png" alt="" />გალერეა</a
+          >
+          <a href="../pages/reviews.html"
+            ><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a
+          >
 
-          <a href="../pages/cart.html"><img src="../assets/icons/cart.png" alt="" />კალათა</a>
+          <a href="../pages/cart.html"
+            ><img src="../assets/icons/cart.png" alt="" />კალათა</a
+          >
         </nav>
         <div class="header-actions">
           <button id="themeToggleBtn" class="icon-btn" title="თემის შეცვლა">
             <span id="themeIcon">🌙</span>
           </button>
+          <div id="userInfo" class="hidden">
+            <span id="welcomeMsg" class="welcome-text"></span>
+            <button class="btn-outline small" id="logoutBtn">გასვლა</button>
+          </div>
+          <div id="guestBtns">
+            <a href="../pages/login.html" class="btn-outline">
+              <img
+                src="../assets/icons/user-solid.png"
+                alt=""
+                class="btn-icon"
+              />შესვლა
+            </a>
+          </div>
           <button class="burger" id="burgerBtn" aria-label="მენიუ">
             <img
               src="../assets/icons/bars-solid.png"
@@ -41,15 +142,37 @@
         </div>
       </div>
             <div class="mobile-nav" id="mobileNav">
-        <a href="../pages/index.html" class="mob-link"><img src="../assets/icons/home.png" alt="" />მთავარი</a>
-        <a href="../pages/index.html#stations" class="mob-link"><img src="../assets/icons/location-dot-solid.png" alt="" />სადგურები</a>
-        <a href="../pages/index.html#departures" class="mob-link"><img src="../assets/icons/calendar-solid.png" alt="" />გამგზავრებები</a>
-        <a href="../pages/booking.html" class="mob-link"><img src="../assets/icons/cart.png" alt="" />დაჯავშნა</a>
-        <a href="../pages/gallery.html" class="mob-link"><img src="../assets/icons/calendar-solid.png" alt="" />გალერეა</a>
-        <a href="../pages/reviews.html" class="mob-link"><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a>
+        <a href="../pages/index.html" class="mob-link"
+          ><img src="../assets/icons/home.png" alt="" />მთავარი</a
+        >
+        <a href="../pages/index.html#stations" class="mob-link"
+          ><img
+            src="../assets/icons/location-dot-solid.png"
+            alt=""
+          />სადგურები</a
+        >
+        <a href="../pages/index.html#departures" class="mob-link"
+          ><img
+            src="../assets/icons/calendar-solid.png"
+            alt=""
+          />გამგზავრებები</a
+        >
+        <a href="../pages/booking.html" class="mob-link"
+          ><img src="../assets/icons/cart.png" alt="" />დაჯავშნა</a
+        >
+        <a href="../pages/gallery.html" class="mob-link"
+          ><img src="../assets/icons/calendar-solid.png" alt="" />გალერეა</a
+        >
+        <a href="../pages/reviews.html" class="mob-link"
+          ><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a
+        >
 
-        <a href="../pages/cart.html" class="mob-link"><img src="../assets/icons/cart.png" alt="" />კალათა</a>
-        <a href="../pages/login.html" class="mob-link"><img src="../assets/icons/user-solid.png" alt="" />შესვლა</a>
+        <a href="../pages/cart.html" class="mob-link"
+          ><img src="../assets/icons/cart.png" alt="" />კალათა</a
+        >
+        <a href="../pages/login.html" class="mob-link"
+          ><img src="../assets/icons/user-solid.png" alt="" />შესვლა</a
+        >
       </div>
     </header>
 
@@ -124,6 +247,8 @@
           </p>
         </div>
       </div>
+      <!-- localStorage Info (სამშინაო დავალება) -->
+      <div id="tokenInfo" class="token-info-wrap"></div>
     </main>
 
     <footer>
@@ -154,7 +279,14 @@
           <h4 class="footer-heading">კონტაქტი</h4>
           <p class="footer-contact">ბათუმი, რუსთაველის ქ. 12</p>
           <p class="footer-contact">+995 577 00 11 22</p>
-          <p class="footer-contact"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c6afa8a0a986bfa7a5aeb2a4a9a9adafa8a1e8a1a3">[email&#160;protected]</a></p>
+          <p class="footer-contact">
+            <a
+              href="/cdn-cgi/l/email-protection"
+              class="__cf_email__"
+              data-cfemail="c6afa8a0a986bfa7a5aeb2a4a9a9adafa8a1e8a1a3"
+              >[email&#160;protected]</a
+            >
+          </p>
           <div class="footer-social">
             <a href="#"
               ><img
@@ -190,4 +322,5 @@
     </footer>
 
     <script src="../scripts/login.js" type="module"></script>
-    <script>
+  </body>
+</html>

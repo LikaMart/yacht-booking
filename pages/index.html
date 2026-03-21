@@ -124,7 +124,6 @@
           <a href="../pages/reviews.html"
             ><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a
           >
-
           <a href="../pages/cart.html"
             ><img src="../assets/icons/cart.png" alt="" />კალათა</a
           >
@@ -171,7 +170,6 @@
         <a href="../pages/reviews.html" class="mob-link"
           ><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a
         >
-
         <a href="../pages/cart.html" class="mob-link"
           ><img src="../assets/icons/cart.png" alt="" />კალათა</a
         >
@@ -191,6 +189,7 @@
           <button class="tab-btn active" id="tabLogin">შესვლა</button>
           <button class="tab-btn" id="tabRegister">რეგისტრაცია</button>
         </div>
+        <!-- LOGIN FORM -->
         <div id="loginForm" class="auth-form">
           <h2>კეთილი იყოს შენი დაბრუნება</h2>
           <div class="form-group">
@@ -216,6 +215,7 @@
           </button>
           <div id="loginMsg" class="auth-msg hidden"></div>
         </div>
+        <!-- REGISTER FORM -->
         <div id="registerForm" class="auth-form hidden">
           <h2>ახალი ანგარიში</h2>
           <div class="form-group">
@@ -282,7 +282,7 @@
           </div>
           <div class="hero-stat">
             <span class="hero-stat-num">84+</span>
-            <span class="hero-stat-label">ადგილი ვაგონში</span>
+            <span class="hero-stat-label">ადგილი იახტაზე</span>
           </div>
         </div>
       </div>
@@ -397,7 +397,6 @@
             <li><a href="../pages/booking.html">დაჯავშნა</a></li>
             <li><a href="../pages/gallery.html">გალერეა</a></li>
             <li><a href="../pages/reviews.html">რევიუები</a></li>
-
             <li><a href="../pages/cart.html">კალათა</a></li>
             <li><a href="../pages/login.html">შესვლა</a></li>
           </ul>
@@ -443,7 +442,7 @@
 
     <script src="../scripts/app.js" type="module"></script>
     <script>
-      // Accordion
+      // Accordion - section გახსნა/დახურვა
       document.querySelectorAll(".accordion-header").forEach((h) => {
         h.addEventListener("click", () => {
           const id = h.dataset.target;
@@ -455,13 +454,24 @@
           if (!wasOpen) sec.classList.add("open");
         });
       });
-      // hash-ით გახსნა (#stations, #departures)
+
+      // URL hash-ით გახსნა (#stations, #departures, #tickets)
       const hash = window.location.hash.replace("#", "");
       if (hash) {
-        const t = document.getElementById(`acc-${hash}`);
-        if (t) {
-          t.classList.add("open");
-          setTimeout(() => t.scrollIntoView({ behavior: "smooth" }), 150);
+        const targetMap = {
+          stations: "acc-stations",
+          departures: "acc-departures",
+          tickets: "acc-tickets",
+        };
+        const accId = targetMap[hash];
+        if (accId) {
+          const sec = document.getElementById(accId);
+          if (sec) {
+            sec.classList.add("open");
+            setTimeout(() => {
+              sec.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 150);
+          }
         }
       }
     </script>

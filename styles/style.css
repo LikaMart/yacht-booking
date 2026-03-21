@@ -1659,3 +1659,115 @@ textarea:focus {
   color: rgba(255, 255, 255, 0.65);
 }
 /* #endregion HERO STATS */
+
+/* ============================================================ */
+/* FIX: Auth state visibility - გასვლა ღილაკი ყოველთვის ჩანდეს */
+/* ============================================================ */
+
+/* userInfo და guestBtns: hidden კლასი JS-ით მოიხსნება */
+#userInfo,
+#guestBtns {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+#userInfo.hidden,
+#guestBtns.hidden {
+  display: none !important;
+}
+
+/* header-actions-ში ავტ ბლოკი ყოველთვის ხილული */
+.header-actions #userInfo,
+.header-actions #guestBtns {
+  flex-shrink: 0;
+}
+
+/* ============================================================ */
+/* FIX: Login page - form spacing */
+/* ============================================================ */
+.auth-form-page {
+  padding-top: 0.25rem;
+}
+
+/* ვიზუალური გამყოფი ტაბებსა და ფორმს შორის */
+.auth-tabs {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
+}
+
+/* ============================================================ */
+/* FIX: Gallery dataset info */
+/* ============================================================ */
+.gallery-item .gallery-badge {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.5px;
+}
+
+.gallery-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.gallery-meta-row {
+  display: flex;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--text-light);
+}
+
+.gallery-meta-row span:first-child {
+  font-weight: 700;
+  color: var(--text);
+  min-width: 3.5rem;
+}
+
+/* ============================================================ */
+/* FIX: Responsive header - ensure auth buttons always visible  */
+/* ============================================================ */
+@media (max-width: 56.25rem) {
+  .header-actions {
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+  }
+  
+  #userInfo,
+  #guestBtns {
+    display: flex !important;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  #userInfo.hidden,
+  #guestBtns.hidden {
+    display: none !important;
+  }
+
+  .welcome-text {
+    display: none; /* სახელი მობილურზე იმარტივება */
+  }
+
+  .btn-outline.small {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 37.5rem) {
+  .btn-outline {
+    padding: 0.35rem 0.55rem;
+  }
+  
+  .btn-outline .btn-icon {
+    display: none; /* icon იმარტივება პატარა ეკრანზე */
+  }
+}
