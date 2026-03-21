@@ -10,186 +10,114 @@
     />
     <link rel="stylesheet" href="../styles/style.css" />
     <style>
-      .gallery-page {
-        padding: 2rem 1.5rem 4rem;
-      }
-      .gallery-page .section-inner {
-        max-width: 1100px;
-        margin: 0 auto;
-      }
-      .carousel-wrap {
-        position: relative;
-        margin-bottom: 3rem;
-        isolation: isolate;
-      }
-      .carousel-track-outer {
-        overflow: hidden;
-        border-radius: 1rem;
-      }
-      .carousel-track {
-        display: flex;
-        transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: transform;
-      }
+      .gallery-page { padding: 2rem 1.5rem 4rem; }
+      .gallery-page .section-inner { max-width: 1100px; margin: 0 auto; }
+
+      /* კარუსელი */
+      .carousel-wrap { position: relative; margin-bottom: 3rem; isolation: isolate; }
+      .carousel-track-outer { overflow: hidden; border-radius: 1rem; }
+      .carousel-track { display: flex; transition: transform 0.45s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
       .carousel-slide {
-        min-width: 100%;
-        position: relative;
-        background: var(--navy);
-        border-radius: 1rem;
-        overflow: hidden;
-        height: 26rem;
-        display: flex;
-        align-items: flex-end;
+        min-width: 100%; position: relative; background: var(--navy);
+        border-radius: 1rem; overflow: hidden; height: 26rem;
+        display: flex; align-items: flex-end;
       }
       .carousel-slide::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to bottom,
-          transparent 30%,
-          rgba(0, 0, 0, 0.75) 100%
-        );
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.75) 100%);
         z-index: 1;
       }
-      .carousel-caption {
-        position: relative;
-        z-index: 2;
-        padding: 2rem;
-        color: white;
-      }
-      .carousel-caption h3 {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 2rem;
-        letter-spacing: 2px;
-        margin-bottom: 0.35rem;
-      }
-      .carousel-caption p {
-        font-size: 0.9rem;
-        opacity: 0.8;
-      }
+      .carousel-caption { position: relative; z-index: 2; padding: 2rem; color: white; }
+      .carousel-caption h3 { font-family: "Bebas Neue", sans-serif; font-size: 2rem; letter-spacing: 2px; margin-bottom: 0.35rem; }
+      .carousel-caption p { font-size: 0.9rem; opacity: 0.8; }
       .carousel-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(255, 255, 255, 0.15);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        width: 3rem;
-        height: 3rem;
-        border-radius: 50%;
-        font-size: 1.2rem;
-        cursor: pointer;
-        z-index: 20;
-        backdrop-filter: blur(4px);
-        transition: background 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: all;
+        position: absolute; top: 50%; transform: translateY(-50%);
+        background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3);
+        color: white; width: 3rem; height: 3rem; border-radius: 50%;
+        font-size: 1.2rem; cursor: pointer; z-index: 20;
+        backdrop-filter: blur(4px); transition: background 0.2s;
+        display: flex; align-items: center; justify-content: center;
       }
-      .carousel-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-      .carousel-btn.prev {
-        left: 1rem;
-      }
-      .carousel-btn.next {
-        right: 1rem;
-      }
-      .carousel-dots {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 1rem;
-      }
+      .carousel-btn:hover { background: rgba(255,255,255,0.3); }
+      .carousel-btn.prev { left: 1rem; }
+      .carousel-btn.next { right: 1rem; }
+      .carousel-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
       .carousel-dot {
-        width: 0.5rem;
-        height: 0.5rem;
-        border-radius: 50%;
-        background: var(--border);
-        border: none;
-        cursor: pointer;
-        transition:
-          background 0.2s,
-          transform 0.2s;
+        width: 0.5rem; height: 0.5rem; border-radius: 50%;
+        background: var(--border); border: none; cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
       }
-      .carousel-dot.active {
-        background: var(--accent);
-        transform: scale(1.3);
-      }
-      .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-        gap: 1rem;
-      }
+      .carousel-dot.active { background: var(--accent); transform: scale(1.3); }
+
+      /* გალერეა */
+      .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1rem; }
       .gallery-item {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 0.75rem;
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-        cursor: pointer;
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: 0.75rem; overflow: hidden;
+        box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s;
+        cursor: default;
       }
-      .gallery-item:hover {
-        transform: translateY(-0.3rem);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-      }
+      .gallery-item:hover { transform: translateY(-0.3rem); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
       .gallery-thumb {
-        width: 100%;
-        height: 11rem;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 4rem;
-        background: var(--bg);
+        width: 100%; height: 11rem; overflow: hidden;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 4rem; background: var(--bg);
       }
-      .gallery-thumb img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-      .gallery-info {
-        padding: 0.75rem 1rem;
-      }
-      .gallery-info h4 {
-        font-size: 0.95rem;
+      .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
+      .gallery-item:hover .gallery-thumb img { transform: scale(1.04); }
+      .gallery-info { padding: 0.75rem 1rem; }
+      .gallery-info h4 { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+      .gallery-info p { font-size: 0.82rem; color: var(--text-light); }
+
+      /* Badge ღილაკი */
+      .gallery-badge {
+        display: inline-block;
+        background: var(--navy);
+        color: var(--accent);
+        font-size: 0.72rem;
         font-weight: 700;
-        color: var(--text);
-        margin-bottom: 0.2rem;
+        padding: 0.2rem 0.65rem;
+        border-radius: 999px;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.4rem;
+        cursor: pointer;
+        border: none;
+        font-family: "Noto Sans Georgian", sans-serif;
+        transition: background 0.2s, transform 0.15s;
+        user-select: none;
       }
-      .gallery-info p {
-        font-size: 0.82rem;
-        color: var(--text-light);
+      .gallery-badge:hover { background: #2d3e6e; transform: translateY(-1px); }
+
+      /* Tooltip — body-ზე append-ავს JS, overflow:hidden ვერ ჭრის */
+      .gal-tip {
+        position: fixed;
+        z-index: 9999;
+        background: #1a2744;
+        color: #fff;
+        font-family: "Noto Sans Georgian", sans-serif;
+        font-size: 0.8rem;
+        line-height: 1.65;
+        padding: 0.6rem 0.9rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.32);
+        pointer-events: none;
+        white-space: pre-line;
+        min-width: 10rem;
+        max-width: 14rem;
+        opacity: 0;
+        transition: opacity 0.15s ease;
       }
+      .gal-tip.visible { opacity: 1; }
+
       @media (max-width: 56.25rem) {
-        .carousel-slide {
-          height: 20rem;
-        }
-        .gallery-grid {
-          grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-        }
+        .carousel-slide { height: 20rem; }
+        .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
       }
       @media (max-width: 37.5rem) {
-        .carousel-slide {
-          height: 15rem;
-        }
-        .carousel-btn {
-          width: 2.2rem;
-          height: 2.2rem;
-          font-size: 1rem;
-        }
-        .gallery-grid {
-          grid-template-columns: 1fr 1fr;
-        }
-        .gallery-thumb {
-          height: 8rem;
-        }
+        .carousel-slide { height: 15rem; }
+        .carousel-btn { width: 2.2rem; height: 2.2rem; font-size: 1rem; }
+        .gallery-grid { grid-template-columns: 1fr 1fr; }
+        .gallery-thumb { height: 8rem; }
       }
     </style>
   </head>
@@ -201,22 +129,11 @@
           <span>yacht booking</span>
         </a>
         <nav id="mainNav">
-          <a href="../pages/index.html"
-            ><img src="../assets/icons/home.png" alt="" />მთავარი</a
-          >
-          <a href="../pages/booking.html"
-            ><img src="../assets/icons/cart.png" alt="" />დაჯავშნა</a
-          >
-          <a href="../pages/gallery.html" class="active-link"
-            ><img src="../assets/icons/calendar-solid.png" alt="" />გალერეა</a
-          >
-          <a href="../pages/reviews.html"
-            ><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a
-          >
-
-          <a href="../pages/cart.html"
-            ><img src="../assets/icons/cart.png" alt="" />კალათა</a
-          >
+          <a href="../pages/index.html"><img src="../assets/icons/home.png" alt="" />მთავარი</a>
+          <a href="../pages/booking.html"><img src="../assets/icons/cart.png" alt="" />დაჯავშნა</a>
+          <a href="../pages/gallery.html" class="active-link"><img src="../assets/icons/calendar-solid.png" alt="" />გალერეა</a>
+          <a href="../pages/reviews.html"><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a>
+          <a href="../pages/cart.html"><img src="../assets/icons/cart.png" alt="" />კალათა</a>
         </nav>
         <div class="header-actions">
           <button id="themeToggleBtn" class="icon-btn" title="თემის შეცვლა">
@@ -228,42 +145,21 @@
           </div>
           <div id="guestBtns">
             <a href="../pages/login.html" class="btn-outline">
-              <img
-                src="../assets/icons/user-solid.png"
-                alt=""
-                class="btn-icon"
-              />შესვლა
+              <img src="../assets/icons/user-solid.png" alt="" class="btn-icon" />შესვლა
             </a>
           </div>
           <button class="burger" id="burgerBtn" aria-label="მენიუ">
-            <img
-              src="../assets/icons/bars-solid.png"
-              alt="menu"
-              class="burger-icon"
-            />
+            <img src="../assets/icons/bars-solid.png" alt="menu" class="burger-icon" />
           </button>
         </div>
       </div>
       <div class="mobile-nav" id="mobileNav">
-        <a href="../pages/index.html" class="mob-link"
-          ><img src="../assets/icons/home.png" alt="" />მთავარი</a
-        >
-        <a href="../pages/booking.html" class="mob-link"
-          ><img src="../assets/icons/cart.png" alt="" />დაჯავშნა</a
-        >
-        <a href="../pages/gallery.html" class="mob-link"
-          ><img src="../assets/icons/calendar-solid.png" alt="" />გალერეა</a
-        >
-        <a href="../pages/reviews.html" class="mob-link"
-          ><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a
-        >
-
-        <a href="../pages/cart.html" class="mob-link"
-          ><img src="../assets/icons/cart.png" alt="" />კალათა</a
-        >
-        <a href="../pages/login.html" class="mob-link"
-          ><img src="../assets/icons/user-solid.png" alt="" />შესვლა</a
-        >
+        <a href="../pages/index.html" class="mob-link"><img src="../assets/icons/home.png" alt="" />მთავარი</a>
+        <a href="../pages/booking.html" class="mob-link"><img src="../assets/icons/cart.png" alt="" />დაჯავშნა</a>
+        <a href="../pages/gallery.html" class="mob-link"><img src="../assets/icons/calendar-solid.png" alt="" />გალერეა</a>
+        <a href="../pages/reviews.html" class="mob-link"><img src="../assets/icons/user-solid.png" alt="" />რევიუები</a>
+        <a href="../pages/cart.html" class="mob-link"><img src="../assets/icons/cart.png" alt="" />კალათა</a>
+        <a href="../pages/login.html" class="mob-link"><img src="../assets/icons/user-solid.png" alt="" />შესვლა</a>
       </div>
     </header>
 
@@ -275,97 +171,36 @@
         <div class="carousel-wrap">
           <div class="carousel-track-outer">
             <div class="carousel-track" id="carouselTrack">
-              <!-- სლაიდი 1-->
               <div class="carousel-slide">
-                <img
-                  src="../assets/images/yacht1.jpg"
-                  alt="სლაიდი 1"
-                  style="
-                    position: absolute;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                  "
-                />
+                <img src="../assets/images/yacht1.jpg" alt="სლაიდი 1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
                 <div class="carousel-caption">
                   <h3>თბილისი — ბათუმი</h3>
-                  <p>
-                    საქართველოს ყველაზე პოპულარული მარშრუტი — 5 საათი სილამაზე
-                  </p>
+                  <p>საქართველოს ყველაზე პოპულარული მარშრუტი — 5 საათი სილამაზე</p>
                 </div>
               </div>
-
-              <!-- სლაიდი 2 -->
               <div class="carousel-slide">
-                <img
-                  src="../assets/images/yacht2.jpg"
-                  alt="სლაიდი 2"
-                  style="
-                    position: absolute;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                  "
-                />
+                <img src="../assets/images/yacht2.jpg" alt="სლაიდი 2" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
                 <div class="carousel-caption">
                   <h3>ბათუმის სადგური</h3>
                   <p>შავი ზღვის სანაპიროზე — ქალაქი სადაც ოცნება იწყება</p>
                 </div>
               </div>
-
-              <!-- სლაიდი 3 -->
               <div class="carousel-slide">
-                <img
-                  src="../assets/images/yacht3.jpg"
-                  alt="სლაიდი 3"
-                  style="
-                    position: absolute;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                  "
-                />
+                <img src="../assets/images/yacht3.jpg" alt="სლაიდი 3" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
                 <div class="carousel-caption">
                   <h3>მთიანი საქართველო</h3>
                   <p>ფანჯრიდან მთები — ყველა ტრასის ყველაზე ლამაზი ხედი</p>
                 </div>
               </div>
-
-              <!-- სლაიდი 4 -->
               <div class="carousel-slide">
-                <img
-                  src="../assets/images/yacht4.jpg"
-                  alt="სლაიდი 4"
-                  style="
-                    position: absolute;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                  "
-                />
+                <img src="../assets/images/yacht4.jpg" alt="სლაიდი 4" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
                 <div class="carousel-caption">
                   <h3>ღამის იახტა</h3>
                   <p>ვარსკვლავებს ქვეშ, ბიზნეს კლასში — კომფორტი სადაც გინდა</p>
                 </div>
               </div>
-
-              <!-- სლაიდი 5 -->
               <div class="carousel-slide">
-                <img
-                  src="../assets/images/yacht5.jpg"
-                  alt="სლაიდი 5"
-                  style="
-                    position: absolute;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                  "
-                />
+                <img src="../assets/images/yacht5.jpg" alt="სლაიდი 5" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
                 <div class="carousel-caption">
                   <h3>ფოთის სადგური</h3>
                   <p>კოლხეთის კარიბჭე — სადაც ზღვა და ტყე ხვდება</p>
@@ -373,245 +208,115 @@
               </div>
             </div>
           </div>
-
-          <!-- ისრები - carousel-track-outer-ის გარეთ! -->
-          <button class="carousel-btn prev" id="carouselPrev" aria-label="წინა">
-            &#8592;
-          </button>
-          <button
-            class="carousel-btn next"
-            id="carouselNext"
-            aria-label="შემდეგი"
-          >
-            &#8594;
-          </button>
-
-          <!-- წერტილები -->
+          <button class="carousel-btn prev" id="carouselPrev" aria-label="წინა">&#8592;</button>
+          <button class="carousel-btn next" id="carouselNext" aria-label="შემდეგი">&#8594;</button>
           <div class="carousel-dots" id="carouselDots"></div>
         </div>
 
         <!-- გალერეის ბარათები -->
-        <h2 class="section-title" style="margin-bottom: 1.25rem">ფოტოები</h2>
+        <h2 class="section-title" style="margin-bottom:1.25rem">ფოტოები</h2>
         <div class="gallery-grid">
-          <!-- ბარათი 1 -->
-          <div
-            class="gallery-item"
-            data-id="812"
-            data-route="თბილისი — ბათუმი"
-            data-class="ბიზნეს კლასი"
-            data-capacity="180"
-            data-year="2022"
-          >
+
+          <div class="gallery-item"
+            data-tip="მარშრუტი: თბილისი — ბათუმი&#10;კლასი: ბიზნეს&#10;ტევადობა: 180&#10;წელი: 2022">
             <div class="gallery-thumb">
               <img src="../assets/images/yachtmain1.jpg" alt="იახტა #812" />
             </div>
             <div class="gallery-info">
-              <span class="gallery-badge">იახტა #812</span>
-              <div class="gallery-meta">
-                <div class="gallery-meta-row">
-                  <span>მარშრუტი</span><span>თბილისი — ბათუმი</span>
-                </div>
-                <div class="gallery-meta-row">
-                  <span>კლასი</span><span>ბიზნეს</span>
-                </div>
-              </div>
+              <button class="gallery-badge">იახტა #812</button>
+              <p>თბილისი — ბათუმი</p>
             </div>
           </div>
 
-          <!-- ბარათი 2 -->
-          <div
-            class="gallery-item"
-            data-id="port-batumi"
-            data-type="სადგური"
-            data-city="ბათუმი"
-            data-country="საქართველო"
-            data-piers="12"
-          >
+          <div class="gallery-item"
+            data-tip="ქალაქი: ბათუმი, საქართველო&#10;ტიპი: სადგური&#10;პიერები: 12">
             <div class="gallery-thumb">
               <img src="../assets/images/6.jpg" alt="ბათუმის სადგური" />
             </div>
             <div class="gallery-info">
-              <span class="gallery-badge">სადგური</span>
-              <div class="gallery-meta">
-                <div class="gallery-meta-row">
-                  <span>ქალაქი</span><span>ბათუმი, საქართველო</span>
-                </div>
-                <div class="gallery-meta-row">
-                  <span>მისაყვანი</span><span>12 პიერი</span>
-                </div>
-              </div>
+              <button class="gallery-badge">სადგური</button>
+              <p>ბათუმი, საქართველო</p>
             </div>
           </div>
 
-          <!-- ბარათი 3 -->
-          <div
-            class="gallery-item"
-            data-id="class-business"
-            data-type="კლასი"
-            data-seats="48"
-            data-wifi="true"
-            data-catering="true"
-          >
+          <div class="gallery-item"
+            data-tip="კლასი: ბიზნეს&#10;ადგილები: 48&#10;WiFi: კი&#10;კვება: კი">
             <div class="gallery-thumb">
               <img src="../assets/images/7.jpg" alt="ბიზნეს კლასი" />
             </div>
             <div class="gallery-info">
-              <span class="gallery-badge">ბიზნეს კლასი</span>
-              <div class="gallery-meta">
-                <div class="gallery-meta-row">
-                  <span>ადგილები</span><span>48 ადგილი</span>
-                </div>
-                <div class="gallery-meta-row">
-                  <span>სერვისი</span><span>WiFi, კვება</span>
-                </div>
-              </div>
+              <button class="gallery-badge">ბიზნეს კლასი</button>
+              <p>კომფორტი გზაში</p>
             </div>
           </div>
 
-          <!-- ბარათი 4 -->
-          <div
-            class="gallery-item"
-            data-id="night-voyage"
-            data-type="მარშრუტი"
-            data-class="I კლასი"
-            data-duration="5 სთ"
-            data-departure="22:00"
-          >
+          <div class="gallery-item"
+            data-tip="გამგზავრება: 22:00&#10;კლასი: I კლასი&#10;ხანგძლ.: 5 საათი">
             <div class="gallery-thumb">
               <img src="../assets/images/yacht4.jpg" alt="ღამის მგზავრობა" />
             </div>
             <div class="gallery-info">
-              <span class="gallery-badge">ღამის მარშრუტი</span>
-              <div class="gallery-meta">
-                <div class="gallery-meta-row">
-                  <span>გამგ.</span><span>22:00</span>
-                </div>
-                <div class="gallery-meta-row">
-                  <span>ხანგძლ.</span><span>5 საათი</span>
-                </div>
-              </div>
+              <button class="gallery-badge">ღამის მარშრუტი</button>
+              <p>I კლასი, სრული კომფორტი</p>
             </div>
           </div>
 
-          <!-- ბარათი 5 -->
-          <div
-            class="gallery-item"
-            data-id="route-tbilisi-poti"
-            data-type="მარშრუტი"
-            data-route="თბილისი — ფოთი"
-            data-distance="310 კმ"
-            data-season="გაზაფხული"
-          >
+          <div class="gallery-item"
+            data-tip="მარშრუტი: თბილისი — ფოთი&#10;სეზონი: გაზაფხული&#10;მანძილი: 310 კმ">
             <div class="gallery-thumb">
               <img src="../assets/images/8.jpg" alt="გაზაფხულის მარშრუტი" />
             </div>
             <div class="gallery-info">
-              <span class="gallery-badge">მარშრუტი</span>
-              <div class="gallery-meta">
-                <div class="gallery-meta-row">
-                  <span>მარშრ.</span><span>თბილისი — ფოთი</span>
-                </div>
-                <div class="gallery-meta-row">
-                  <span>სეზონი</span><span>გაზაფხული</span>
-                </div>
-              </div>
+              <button class="gallery-badge">მარშრუტი</button>
+              <p>თბილისი — ფოთი</p>
             </div>
           </div>
 
-          <!-- ბარათი 6 -->
-          <div
-            class="gallery-item"
-            data-id="mountain-view"
-            data-type="ხედი"
-            data-location="ლიხის ქედი"
-            data-altitude="1200მ"
-            data-season="ყოველი სეზონი"
-          >
+          <div class="gallery-item"
+            data-tip="ადგილმდ.: ლიხის ქედი&#10;სეზონი: ყოველ სეზონი">
             <div class="gallery-thumb">
               <img src="../assets/images/9.jpg" alt="მთის ხედი" />
             </div>
             <div class="gallery-info">
-              <span class="gallery-badge">იახტის ხედი</span>
-              <div class="gallery-meta">
-                <div class="gallery-meta-row">
-                  <span>ადგ.</span><span>ლიხის ქედი</span>
-                </div>
-                <div class="gallery-meta-row">
-                  <span>სეზ.</span><span>ყოველ სეზონი</span>
-                </div>
-              </div>
+              <button class="gallery-badge">იახტის ხედი</button>
+              <p>ქართული ბუნება</p>
             </div>
           </div>
 
-          <!-- ბარათი 7 -->
-          <div
-            class="gallery-item"
-            data-id="sunrise"
-            data-type="ხედი"
-            data-time="06:30"
-            data-season="ზაფხული"
-            data-route="ბათუმი"
-          >
+          <div class="gallery-item"
+            data-tip="დრო: 06:30&#10;ადგილმდ.: ბათუმი&#10;სეზონი: ზაფხული">
             <div class="gallery-thumb">
               <img src="../assets/images/yacht2.jpg" alt="გამთენია" />
             </div>
             <div class="gallery-info">
-              <span class="gallery-badge">გამთენია</span>
-              <div class="gallery-meta">
-                <div class="gallery-meta-row">
-                  <span>დრო</span><span>06:30</span>
-                </div>
-                <div class="gallery-meta-row">
-                  <span>ადგ.</span><span>ბათუმი</span>
-                </div>
-              </div>
+              <button class="gallery-badge">გამთენია</button>
+              <p>იახტიდან ხედი</p>
             </div>
           </div>
 
-          <!-- ბარათი 8-->
-          <div
-            class="gallery-item"
-            data-id="ticket-sample"
-            data-type="ბილეთი"
-            data-price-from="45₾"
-            data-class="ეკონომი / ბიზნეს"
-            data-booking="ონლაინ"
-          >
+          <div class="gallery-item"
+            data-tip="ფასი: 45₾-დან&#10;კლასი: ეკონომი / ბიზნეს&#10;ჯავშნა: ონლაინ">
             <div class="gallery-thumb">
               <img src="../assets/images/yacht3.jpg" alt="ბილეთი" />
             </div>
             <div class="gallery-info">
-              <span class="gallery-badge">ბილეთი</span>
-              <div class="gallery-meta">
-                <div class="gallery-meta-row">
-                  <span>ფასი</span><span>45₾-დან</span>
-                </div>
-                <div class="gallery-meta-row">
-                  <span>ჯავშ.</span><span>ონლაინ</span>
-                </div>
-              </div>
+              <button class="gallery-badge">ბილეთი</button>
+              <p>შენი შემდეგი მგზავრობა</p>
             </div>
           </div>
+
         </div>
-        <!-- /gallery-grid -->
       </div>
-      <!-- /section-inner -->
     </main>
 
     <footer>
       <div class="footer-inner">
         <div class="footer-col">
           <div class="logo footer-logo-wrap">
-            <img
-              src="../assets/icons/ship.png"
-              alt=""
-              class="logo-icon footer-logo"
-            />
+            <img src="../assets/icons/ship.png" alt="" class="logo-icon footer-logo" />
             <span>yacht booking</span>
           </div>
-          <p class="footer-desc">
-            სამგზავრო ბილეთები საქართველოს ყველა მიმართულებით.
-          </p>
+          <p class="footer-desc">სამგზავრო ბილეთები საქართველოს ყველა მიმართულებით.</p>
         </div>
         <div class="footer-col">
           <h4 class="footer-heading">ნავიგაცია</h4>
@@ -627,25 +332,10 @@
           <h4 class="footer-heading">კონტაქტი</h4>
           <p class="footer-contact">ბათუმი, რუსთაველის ქ. 12</p>
           <p class="footer-contact">+995 577 00 11 22</p>
-          <p class="footer-contact">
-            <a
-              href="/cdn-cgi/l/email-protection"
-              class="__cf_email__"
-              data-cfemail="ddb4b3bbb29da4bcbeb5a9bfb2b2b6b4b3baf3bab8"
-              >[email&#160;protected]</a
-            >
-          </p>
+          <p class="footer-contact">info@yachtbooking.ge</p>
           <div class="footer-social">
-            <a href="#"
-              ><img
-                src="../assets/icons/instagram-brands-solid.png"
-                alt="instagram"
-            /></a>
-            <a href="#"
-              ><img
-                src="../assets/icons/facebook-brands-solid.png"
-                alt="facebook"
-            /></a>
+            <a href="#"><img src="../assets/icons/instagram-brands-solid.png" alt="instagram" /></a>
+            <a href="#"><img src="../assets/icons/facebook-brands-solid.png" alt="facebook" /></a>
             <a href="#"><img src="../assets/icons/phone.png" alt="phone" /></a>
           </div>
         </div>
@@ -654,11 +344,9 @@
           <div class="footer-map">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2990.123456789!2d41.6168!3d41.6427!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4057585f2b5c7c3f%3A0x1234567890abcdef!2z4YOT4YOU4YOQ4YOb4YOj4YOX4YOk4YOQIOGDpeGDlOGDmuGDmA!5e0!3m2!1ska!2sge!4v1234567890"
-              width="100%"
-              height="160"
-              style="border: 0; border-radius: 0.5rem"
-              allowfullscreen=""
-              loading="lazy"
+              width="100%" height="160"
+              style="border:0;border-radius:0.5rem"
+              allowfullscreen="" loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
             ></iframe>
           </div>
@@ -669,79 +357,79 @@
       </div>
     </footer>
 
-    <script
-      data-cfasync="false"
-      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-    ></script>
     <script src="../scripts/theme.js" type="module"></script>
     <script>
-      // კარუსელი
-      const track = document.getElementById("carouselTrack");
-      const slides = track.querySelectorAll(".carousel-slide");
+      // ── კარუსელი ──────────────────────────────────────────
+      const track    = document.getElementById("carouselTrack");
+      const slides   = track.querySelectorAll(".carousel-slide");
       const dotsWrap = document.getElementById("carouselDots");
-      let current = 0;
-      let autoTimer;
+      let current = 0, autoTimer;
 
-      // წერტილების შექმნა
       slides.forEach((_, i) => {
         const dot = document.createElement("button");
-        dot.classList.add("carousel-dot");
-        dot.setAttribute("aria-label", `სლაიდი ${i + 1}`);
-        if (i === 0) dot.classList.add("active");
-        dot.addEventListener("click", () => {
-          goTo(i);
-          resetAuto();
-        });
+        dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+        dot.setAttribute("aria-label", "სლაიდი " + (i + 1));
+        dot.addEventListener("click", () => { goTo(i); resetAuto(); });
         dotsWrap.appendChild(dot);
       });
-
       const dots = dotsWrap.querySelectorAll(".carousel-dot");
 
-      function goTo(index) {
-        current = (index + slides.length) % slides.length;
-        track.style.transform = `translateX(-${current * 100}%)`;
+      function goTo(idx) {
+        current = (idx + slides.length) % slides.length;
+        track.style.transform = "translateX(-" + (current * 100) + "%)";
         dots.forEach((d, i) => d.classList.toggle("active", i === current));
       }
-
-      document.getElementById("carouselPrev").addEventListener("click", () => {
-        goTo(current - 1);
-        resetAuto();
-      });
-      document.getElementById("carouselNext").addEventListener("click", () => {
-        goTo(current + 1);
-        resetAuto();
-      });
-
-      function startAuto() {
-        autoTimer = setInterval(() => goTo(current + 1), 4000);
-      }
-      function resetAuto() {
-        clearInterval(autoTimer);
-        startAuto();
-      }
+      document.getElementById("carouselPrev").addEventListener("click", () => { goTo(current - 1); resetAuto(); });
+      document.getElementById("carouselNext").addEventListener("click", () => { goTo(current + 1); resetAuto(); });
+      function startAuto() { autoTimer = setInterval(() => goTo(current + 1), 4000); }
+      function resetAuto() { clearInterval(autoTimer); startAuto(); }
       startAuto();
 
       // Swipe მობილურზე
       let touchStartX = 0;
-
-      track.addEventListener("touchstart", (e) => {
-        touchStartX = e.touches[0].clientX;
+      track.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; });
+      track.addEventListener("touchend",   (e) => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) { goTo(diff > 0 ? current + 1 : current - 1); resetAuto(); }
       });
 
-      track.addEventListener("touchend", (e) => {
-        const touchEndX = e.changedTouches[0].clientX;
+      // ── Badge Tooltip ──────────────────────────────────────
+      // Tooltip div — body-ზე, overflow:hidden-ს გარეთ
+      const tip = document.createElement("div");
+      tip.className = "gal-tip";
+      document.body.appendChild(tip);
 
-        // თუ მარცხნივ swipe-ია
-        if (touchEndX - touchStartX > 50) {
-          goTo(current - 1); // გადადი წინა სლაიდზე
-          resetAuto(); // ავტომატური გადახვევის reset
-        }
-        // თუ მარჯვნივ swipe-ია
-        else if (touchStartX - touchEndX > 50) {
-          goTo(current + 1); // გადადი შემდეგ სლაიდზე
-          resetAuto(); // ავტომატური გადახვევის reset
-        }
+      document.querySelectorAll(".gallery-badge").forEach((badge) => {
+        const item = badge.closest(".gallery-item");
+        const text = item ? item.dataset.tip : "";
+        if (!text) return;
+
+        badge.addEventListener("mouseenter", () => {
+          tip.textContent = text;
+          tip.classList.add("visible");
+          positionTip(badge);
+        });
+        badge.addEventListener("mousemove", () => positionTip(badge));
+        badge.addEventListener("mouseleave", () => tip.classList.remove("visible"));
       });
+
+      function positionTip(badge) {
+        const r = badge.getBoundingClientRect();
+        // ზემოთ badge-ის, ჰორიზონტ. ცენტრი
+        tip.style.left = "0px";
+        tip.style.top  = "0px";
+        const tw = tip.offsetWidth;
+        const th = tip.offsetHeight;
+        let x = r.left + r.width / 2 - tw / 2;
+        let y = r.top - th - 8;
+        // viewport-ის მარჯვენა კიდე
+        if (x + tw > window.innerWidth - 8) x = window.innerWidth - tw - 8;
+        if (x < 8) x = 8;
+        // თუ ზემოთ ადგილი არ არის — ქვემოთ
+        if (y < 8) y = r.bottom + 8;
+        tip.style.left = x + "px";
+        tip.style.top  = y + "px";
+      }
     </script>
   </body>
 </html>
