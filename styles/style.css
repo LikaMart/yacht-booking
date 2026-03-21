@@ -1,6 +1,4 @@
 /* #region VARIABLES & THEMES */
-/* CSS VARIABLES - light theme (default)
-   data-theme="dark" ატრიბუტი html-ზე dark theme-ია*/
 :root {
   --navy: #1a2744;
   --blue: #2563eb;
@@ -19,7 +17,6 @@
   --input-bg: #ffffff;
 }
 
-/* Dark theme: html[data-theme="dark"] ყველა ვარიაბელს ხელახლა განსაზღვრავს */
 [data-theme="dark"] {
   --bg: #0f172a;
   --bg-alt: #1e293b;
@@ -60,7 +57,6 @@ body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
-  /* fixed header-ის გამო - კონტენტი header-ქვემოთ იწყება */
   padding-top: 4rem;
 }
 /* #endregion RESET & BASE */
@@ -89,7 +85,6 @@ header {
   gap: 2rem;
 }
 
-/* ლოგო */
 .logo {
   display: flex;
   align-items: center;
@@ -101,14 +96,16 @@ header {
   text-decoration: none;
 }
 
+a.logo {
+  text-decoration: none;
+}
+
 .logo-icon {
   width: 2rem;
   height: 2rem;
-  /* icon-ებია თეთრ/მუქ ფონზე - brightness filter-ით ვაქცევთ თეთრად */
   filter: brightness(0) invert(1);
 }
 
-/* ნავიგაცია */
 nav {
   display: flex;
   gap: 0.25rem;
@@ -150,14 +147,17 @@ nav a:hover img {
   filter: brightness(0) saturate(100%) invert(70%) sepia(80%) hue-rotate(0deg);
 }
 
-/* ჰედერის მარჯვენა ბლოკი */
+.active-link {
+  color: var(--accent) !important;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: nowrap;
 }
 
-/* თემის ღილაკი */
 .icon-btn {
   background: rgba(255, 255, 255, 0.1);
   border: none;
@@ -176,12 +176,18 @@ nav a:hover img {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Auth ბლოკი */
+/* Auth ბლოკი — JS inline style-ით აკონტროლებს display-ს */
 #guestBtns,
 #userInfo {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+#userInfo.hidden,
+#guestBtns.hidden {
+  display: none !important;
 }
 
 .welcome-text {
@@ -190,7 +196,6 @@ nav a:hover img {
   font-weight: 600;
 }
 
-/* ჰამბურგერი - default hidden, მობილურზე ჩნდება */
 .burger {
   display: none;
   background: rgba(255, 255, 255, 0.1);
@@ -206,7 +211,6 @@ nav a:hover img {
   filter: brightness(0) invert(1);
 }
 
-/* მობილური მენიუ */
 .mobile-nav {
   display: none;
   flex-direction: column;
@@ -277,6 +281,7 @@ nav a:hover img {
   font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
   transition: background 0.2s;
 }
 
@@ -335,7 +340,6 @@ nav a:hover img {
   transform: translateY(-1px);
 }
 
-/* საძებნი ღილაკი - icon-only */
 .btn-search {
   background: var(--blue);
   border: none;
@@ -350,14 +354,13 @@ nav a:hover img {
 .btn-search img {
   width: 1rem;
   height: 1rem;
-  filter: brightness(0) invert(1); /* თეთრი icon */
+  filter: brightness(0) invert(1);
 }
 
 .btn-search:hover {
   background: var(--blue-dark);
 }
 
-/* ღილაკების icon სიზი */
 .btn-icon {
   width: 14px;
   height: 14px;
@@ -373,7 +376,7 @@ nav a:hover img {
 /* #region AUTH MODAL */
 .modal-overlay {
   position: fixed;
-  inset: 0; /* top/right/bottom/left: 0 */
+  inset: 0;
   background: rgba(0, 0, 0, 0.55);
   z-index: 200;
   display: flex;
@@ -417,7 +420,6 @@ nav a:hover img {
   height: 1rem;
 }
 
-/* ტაბ ღილაკები მოდალში */
 .modal-tabs {
   display: flex;
   gap: 0.5rem;
@@ -438,7 +440,6 @@ nav a:hover img {
   transition: all 0.2s;
 }
 
-/* active ტაბი ლურჯი ბორდერი */
 .tab-btn.active {
   border-color: var(--blue);
   color: var(--blue);
@@ -478,14 +479,12 @@ nav a:hover img {
 .accent {
   color: var(--accent);
 }
-
 .hero p {
   font-size: 1.1rem;
   opacity: 0.8;
   margin-bottom: 2rem;
 }
 
-/* ზღვის ანიმაცია hero-ს ბოლოში */
 .sea-track {
   position: absolute;
   bottom: 0;
@@ -495,7 +494,6 @@ nav a:hover img {
   overflow: hidden;
 }
 
-/* ტალღების ეფექტი CSS-ით */
 .waves-bg {
   position: absolute;
   bottom: 0;
@@ -520,7 +518,6 @@ nav a:hover img {
   }
 }
 
-/* გემი - ship.png ფაილი, მოძრაობს მარცხნიდან მარჯვნივ */
 .ship-anim {
   position: absolute;
   bottom: 12px;
@@ -530,8 +527,7 @@ nav a:hover img {
 .ship-img {
   width: 2.5rem;
   height: auto;
-  filter: brightness(0) invert(1); /* თეთრი გემი ბნელ ფონზე */
-  /* ოდნავი ტივტივი */
+  filter: brightness(0) invert(1);
   animation: shipBob 2s ease-in-out infinite;
 }
 
@@ -553,6 +549,31 @@ nav a:hover img {
     transform: translateY(-4px);
   }
 }
+
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.hero-stat {
+  text-align: center;
+}
+
+.hero-stat-num {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  display: block;
+}
+
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+}
 /* #endregion HERO */
 
 /* #region SECTIONS & TYPOGRAPHY */
@@ -560,6 +581,7 @@ nav a:hover img {
   padding: 4rem 1.5rem;
   transition: background 0.3s;
 }
+
 .alt-bg {
   background: var(--bg-alt);
 }
@@ -582,7 +604,6 @@ nav a:hover img {
   padding-left: 0.75rem;
 }
 
-/* dark mode-ში section title ღია */
 [data-theme="dark"] .section-title {
   color: var(--accent);
 }
@@ -590,10 +611,8 @@ nav a:hover img {
 .title-icon {
   width: 1.4rem;
   height: 1.4rem;
-  /* dark mode-ზეც კარგად გამოჩნდეს */
   filter: opacity(0.7);
 }
-
 [data-theme="dark"] .title-icon {
   filter: brightness(0) invert(1) opacity(0.6);
 }
@@ -658,7 +677,6 @@ nav a:hover img {
 .dropdown p:last-child {
   border-bottom: none;
 }
-
 .dropdown p:hover {
   background: rgba(37, 99, 235, 0.08);
   color: var(--blue);
@@ -697,7 +715,6 @@ nav a:hover img {
 [data-theme="dark"] .card h3 {
   color: var(--accent);
 }
-
 .card h4 {
   color: var(--blue);
   font-size: 0.95rem;
@@ -709,7 +726,6 @@ nav a:hover img {
   margin-top: 0.25rem;
 }
 
-/* იახტის ქვე-ბარათი */
 .trainCard {
   background: rgba(37, 99, 235, 0.05);
   border-left: 4px solid var(--blue);
@@ -760,7 +776,9 @@ nav a:hover img {
   letter-spacing: 0.5px;
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+textarea {
   padding: 0.6rem 0.9rem;
   border: 2px solid var(--border);
   border-radius: 8px;
@@ -774,11 +792,26 @@ nav a:hover img {
     background 0.3s;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus,
+textarea:focus {
   border-color: var(--blue);
 }
 
-/* შეტყობინება (success / error) */
+.form-group select {
+  cursor: pointer;
+  width: 100%;
+}
+.form-group select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+textarea {
+  resize: vertical;
+  width: 100%;
+}
+
 .auth-msg {
   margin-top: 0.85rem;
   padding: 0.65rem 1rem;
@@ -797,250 +830,20 @@ nav a:hover img {
   color: #991b1b;
   border: 1px solid #fca5a5;
 }
+
 .hidden {
   display: none !important;
 }
 /* #endregion FORMS */
 
-/* #region FOOTER */
-footer {
-  background: var(--header-bg);
-  transition: background 0.3s;
-  padding: 1.5rem;
-}
-
-.footer-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.footer-copy {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.88rem;
-}
-
-.footer-logo {
-  width: 1.5rem !important;
-  height: 1.5rem !important;
-}
-
-.footer-social {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.footer-social a img {
-  width: 1.2rem;
-  height: 1.2rem;
-  filter: brightness(0) invert(1);
-  opacity: 0.5;
-  transition: opacity 0.2s;
-}
-
-.footer-social a:hover img {
-  opacity: 1;
-}
-/* #endregion FOOTER */
-
-/* #region RESPONSIVE */
-@media (max-width: 768px) {
-  /* ნავი იმალება, ჰამბურგერი ჩნდება */
-  nav {
-    display: none;
-  }
-  .burger {
-    display: flex;
-  }
-
-  /* Auth ღილაკების ტექსტი იმარტივება */
-  /* #openRegisterBtn ხილული რჩება ყველა ზომაზე */
-
-  .hero {
-    padding: 6rem 1rem 3.5rem;
-  }
-
-  .section {
-    padding: 2.5rem 1rem;
-  }
-
-  .products {
-    grid-template-columns: 1fr;
-  }
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .search-wrap input {
-    width: 100%;
-  }
-  .dropdown {
-    width: 100%;
-  }
-
-  .footer-inner {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-/*  RESPONSIVE - Mobile (≤480px) */
-@media (max-width: 480px) {
-  .logo span {
-    font-size: 1.3rem;
-  }
-  .section-title {
-    font-size: 1.7rem;
-  }
-  .form-card {
-    padding: 1.25rem;
-  }
-  .hero h1 {
-    font-size: 2rem;
-  }
-  .modal {
-    padding: 1.5rem;
-  }
-}
-/* #endregion RESPONSIVE */
-
-/* #region select - form-group input-ის იდენტური სტილი */
-.form-group select {
-  padding: 0.6rem 0.9rem;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-family: "Noto Sans Georgian", sans-serif;
-  font-size: 0.95rem;
-  background: var(--input-bg);
-  color: var(--text);
-  outline: none;
-  cursor: pointer;
-  transition:
-    border 0.2s,
-    background 0.3s;
-}
-
-.form-group select:focus {
-  border-color: var(--blue);
-}
-
-.form-group select:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-/* LOGO AS LINK */
-a.logo {
-  text-decoration: none;
-}
-
-/* active nav link */
-.active-link {
-  color: var(--accent) !important;
-}
-
-/* FOOTER - 4 სვეტი */
-.footer-inner {
-  max-width: 75rem;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 1.5rem;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-}
-
-.footer-logo-wrap {
-  margin-bottom: 0.75rem;
-}
-
-.footer-logo {
-  width: 1.5rem !important;
-  height: 1.5rem !important;
-}
-
-.footer-desc {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.85rem;
-  line-height: 1.5;
-}
-
-.footer-heading {
-  color: var(--accent);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-}
-
-.footer-links {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.footer-links a {
-  color: rgba(255, 255, 255, 0.6);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.2s;
-}
-
-.footer-links a:hover {
-  color: var(--accent);
-}
-
-.footer-contact {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.88rem;
-  margin-bottom: 0.3rem;
-}
-
-.footer-social {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
-}
-
-.footer-social a img {
-  width: 1.2rem;
-  height: 1.2rem;
-  filter: brightness(0) invert(1);
-  opacity: 0.5;
-  transition: opacity 0.2s;
-}
-
-.footer-social a:hover img {
-  opacity: 1;
-}
-
-/* Google Maps embed */
-.footer-map iframe {
-  width: 100%;
-  height: 10rem;
-  border: 0;
-  border-radius: 0.5rem;
-}
-
-.footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  text-align: center;
-  padding: 1rem 1.5rem;
-  color: rgba(255, 255, 255, 0.35);
-  font-size: 0.85rem;
-}
-/* #endregion FOOTER */
-
 /* #region LOGIN PAGE */
 .auth-page {
   min-height: calc(100vh - 9rem);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1.5rem;
   padding: 3rem 1.5rem;
 }
 
@@ -1059,6 +862,8 @@ a.logo {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
 }
 
 .auth-tab {
@@ -1088,6 +893,10 @@ a.logo {
   color: var(--text);
 }
 
+.auth-form-page .form-group {
+  margin-bottom: 0.85rem;
+}
+
 .auth-sub {
   color: var(--text-light);
   font-size: 0.9rem;
@@ -1106,9 +915,69 @@ a.logo {
   font-weight: 700;
   text-decoration: none;
 }
-
 .auth-switch a:hover {
   text-decoration: underline;
+}
+
+/* localStorage info panel */
+.token-info-wrap {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.token-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow);
+  transition: background 0.3s;
+}
+
+.token-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 0.75rem;
+}
+
+.token-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.84rem;
+}
+
+.token-row:last-child {
+  border-bottom: none;
+}
+.token-label {
+  font-weight: 700;
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+.token-value {
+  color: var(--text);
+  word-break: break-all;
+  text-align: right;
+}
+.token-mono {
+  font-family: monospace;
+  font-size: 0.76rem;
+  color: var(--blue);
+}
+.token-status-in {
+  color: #059669;
+  font-weight: 700;
+}
+.token-status-out {
+  color: var(--text-light);
 }
 /* #endregion LOGIN PAGE */
 
@@ -1186,51 +1055,26 @@ a.logo {
   font-size: 0.9rem;
   color: var(--text);
 }
-
 .review-date {
   font-size: 0.78rem;
   color: var(--text-light);
 }
-
 .review-stars {
   margin-left: auto;
   color: var(--accent);
   font-size: 0.85rem;
   white-space: nowrap;
 }
-
 .review-text {
   font-size: 0.88rem;
   color: var(--text-light);
   line-height: 1.6;
 }
-
 .review-form-card {
   margin-top: 1rem;
 }
-
 .form-group-full {
   grid-column: 1 / -1;
-}
-
-textarea {
-  padding: 0.6rem 0.9rem;
-  border: 2px solid var(--border);
-  border-radius: 0.5rem;
-  font-family: "Noto Sans Georgian", sans-serif;
-  font-size: 0.95rem;
-  background: var(--input-bg);
-  color: var(--text);
-  outline: none;
-  resize: vertical;
-  width: 100%;
-  transition:
-    border 0.2s,
-    background 0.3s;
-}
-
-textarea:focus {
-  border-color: var(--blue);
 }
 /* #endregion REVIEWS PAGE */
 
@@ -1260,197 +1104,113 @@ textarea:focus {
   margin: 1rem 0;
   animation: shipBob 2s ease-in-out infinite;
 }
-
 .lost-ship-img {
   width: 3.5rem;
   filter: opacity(0.4);
 }
-
 .not-found-inner h2 {
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
   color: var(--text);
 }
-
 .not-found-inner p {
   color: var(--text-light);
   margin-bottom: 2rem;
   font-size: 0.95rem;
 }
-
-/* select სტილი */
-.form-group select {
-  padding: 0.6rem 0.9rem;
-  border: 2px solid var(--border);
-  border-radius: 0.5rem;
-  font-family: "Noto Sans Georgian", sans-serif;
-  font-size: 0.95rem;
-  background: var(--input-bg);
-  color: var(--text);
-  outline: none;
-  cursor: pointer;
-  width: 100%;
-  transition:
-    border 0.2s,
-    background 0.3s;
-}
-
-.form-group select:focus {
-  border-color: var(--blue);
-}
-
-.form-group select:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 /* #endregion PAGE 404 */
 
-/* #region RESPONSIVE - PAGE SPECIFIC */
-/* RESPONSIVE - 1100px - nav icon-ები ვმალავთ, ტექსტი რჩება */
-@media (max-width: 68.75rem) {
-  nav a img {
-    display: none;
-  }
-  nav a {
-    padding: 0.4rem 0.5rem;
-    font-size: 0.82rem;
-  }
+/* #region FOOTER */
+footer {
+  background: var(--header-bg);
+  transition: background 0.3s;
 }
 
-/*  RESPONSIVE - tablet (900px) - nav იმალება, burger ჩნდება
-   auth ღილაკები ყოველთვის ჩანს */
-@media (max-width: 56.25rem) {
-  nav {
-    display: none;
-  }
-  .burger {
-    display: flex;
-  }
-
-  /* header-actions ყოველთვის ჩანს - შესვლა/რეგ ჩათვლით */
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  #guestBtns,
-  #userInfo {
-    display: flex !important;
-  }
-
-  /* section-ები */
-  .section {
-    padding: 2.5rem 1rem;
-  }
-
-  .products {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-inner {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    padding: 2rem 1.5rem;
-  }
-
-  .reviews-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .booking-page {
-    padding: 2rem 1rem;
-  }
-
-  .reviews-page {
-    padding: 2rem 1rem;
-  }
-
-  .auth-container {
-    padding: 1.5rem;
-  }
-
-  .hero {
-    padding: 3.5rem 1.5rem 3rem;
-  }
+.footer-inner {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
 }
 
-/* RESPONSIVE - mobile (600px) */
-@media (max-width: 37.5rem) {
-  .header-inner {
-    padding: 0.6rem 1rem;
-  }
-
-  .logo span {
-    font-size: 1.3rem;
-  }
-
-  /* შესვლა ღილაკის ტექსტი პატარდება */
-  .btn-outline {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.78rem;
-  }
-
-  .btn-main {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.82rem;
-  }
-
-  .products {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-inner {
-    grid-template-columns: 1fr;
-    padding: 1.5rem 1rem;
-  }
-
-  .reviews-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section-title {
-    font-size: 1.7rem;
-  }
-
-  .form-card {
-    padding: 1.25rem;
-  }
-
-  .hero h1 {
-    font-size: 2.2rem;
-  }
-
-  .auth-container {
-    padding: 1.25rem;
-  }
-
-  .page-title {
-    font-size: 1.8rem;
-  }
-
-  .not-found-num {
-    font-size: 5rem;
-  }
-
-  .modal {
-    padding: 1.5rem;
-  }
-
-  .search-wrap input {
-    width: 100%;
-  }
-
-  .dropdown {
-    width: 100%;
-  }
+.footer-logo-wrap {
+  margin-bottom: 0.75rem;
 }
-/* #endregion RESPONSIVE - PAGE SPECIFIC */
+.footer-logo {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+.footer-desc {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.footer-heading {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.footer-links a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+.footer-contact {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+}
+
+.footer-social {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.footer-social a img {
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.footer-social a:hover img {
+  opacity: 1;
+}
+
+.footer-map iframe {
+  width: 100%;
+  height: 10rem;
+  border: 0;
+  border-radius: 0.5rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  padding: 1rem 1.5rem;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.85rem;
+}
+/* #endregion FOOTER */
 
 /* #region CALENDAR */
 .calendar-wrap {
@@ -1468,20 +1228,16 @@ textarea:focus {
   transition: background 0.3s;
 }
 
-/* კლასი JS-ში toggle-ავს */
 .calendar-wrap.cal-open {
   display: block;
 }
-/* #endregion CALENDAR */
 
-/* #region CALENDAR LAYOUT */
 .cal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.75rem;
 }
-
 .cal-title {
   font-weight: 700;
   font-size: 0.95rem;
@@ -1539,27 +1295,23 @@ textarea:focus {
   background: rgba(37, 99, 235, 0.1);
   color: var(--blue);
 }
-
 .cal-cell.today {
   font-weight: 700;
   color: var(--blue);
 }
-
 .cal-cell.selected {
   background: var(--blue);
   color: white;
   font-weight: 700;
 }
-
 .cal-cell.past {
   opacity: 0.3;
   cursor: not-allowed;
 }
-
 .cal-cell.empty {
   cursor: default;
 }
-/* #endregion CALENDAR LAYOUT */
+/* #endregion CALENDAR */
 
 /* #region ACCORDION */
 .accordion-section {
@@ -1571,6 +1323,7 @@ textarea:focus {
   box-shadow: var(--shadow);
   transition: background 0.3s;
 }
+
 .accordion-header {
   display: flex;
   align-items: center;
@@ -1579,9 +1332,11 @@ textarea:focus {
   cursor: pointer;
   user-select: none;
 }
+
 .accordion-header:hover {
   background: rgba(37, 99, 235, 0.04);
 }
+
 .accordion-title {
   font-family: "Bebas Neue", sans-serif;
   font-size: 1.4rem;
@@ -1591,6 +1346,7 @@ textarea:focus {
   align-items: center;
   gap: 0.5rem;
 }
+
 [data-theme="dark"] .accordion-title {
   color: var(--accent);
 }
@@ -1602,6 +1358,7 @@ textarea:focus {
 [data-theme="dark"] .accordion-title img {
   filter: brightness(0) invert(1);
 }
+
 .accordion-arrow {
   width: 1.5rem;
   height: 1.5rem;
@@ -1617,16 +1374,19 @@ textarea:focus {
     background 0.2s;
   flex-shrink: 0;
 }
+
 .accordion-section.open .accordion-arrow {
   transform: rotate(180deg);
   background: var(--blue);
   color: white;
 }
+
 .accordion-body {
   display: none;
   padding: 0 1.5rem 1.5rem;
   border-top: 1px solid var(--border);
 }
+
 .accordion-section.open .accordion-body {
   display: block;
 }
@@ -1635,114 +1395,26 @@ textarea:focus {
 }
 /* #endregion ACCORDION */
 
-/* #region HERO STATS */
-/* Hero stats */
-.hero-stats {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-}
-.hero-stat {
-  text-align: center;
-}
-.hero-stat-num {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 2rem;
-  letter-spacing: 2px;
-  color: var(--accent);
-  display: block;
-}
-.hero-stat-label {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.65);
-}
-/* #endregion HERO STATS */
-
-/* ============================================================ */
-/* FIX: Auth state visibility - გასვლა ღილაკი ყოველთვის ჩანდეს */
-/* ============================================================ */
-
-/* userInfo და guestBtns: hidden კლასი JS-ით მოიხსნება */
-#userInfo,
-#guestBtns {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-#userInfo.hidden,
-#guestBtns.hidden {
-  display: none !important;
-}
-
-/* header-actions-ში ავტ ბლოკი ყოველთვის ხილული */
-.header-actions #userInfo,
-.header-actions #guestBtns {
-  flex-shrink: 0;
-}
-
-/* ============================================================ */
-/* FIX: Login page - form spacing */
-/* ============================================================ */
-.auth-form-page {
-  padding-top: 0.25rem;
-}
-
-/* ვიზუალური გამყოფი ტაბებსა და ფორმს შორის */
-.auth-tabs {
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 1.25rem;
-}
-
-/* ============================================================ */
-/* FIX: Gallery dataset info */
-/* ============================================================ */
-.gallery-item .gallery-badge {
-  display: inline-block;
-  background: var(--navy);
-  color: var(--accent);
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  margin-bottom: 0.3rem;
-  letter-spacing: 0.5px;
-}
-
-.gallery-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.gallery-meta-row {
-  display: flex;
-  gap: 0.4rem;
-  font-size: 0.78rem;
-  color: var(--text-light);
-}
-
-.gallery-meta-row span:first-child {
-  font-weight: 700;
-  color: var(--text);
-  min-width: 3.5rem;
-}
-
-/* ============================================================ */
-/* FIX: Responsive header - ensure auth buttons always visible  */
-/* ============================================================ */
-@media (max-width: 56.25rem) {
-  .header-actions {
-    flex-wrap: nowrap;
-    gap: 0.3rem;
+/* #region RESPONSIVE */
+@media (max-width: 68.75rem) {
+  nav a img {
+    display: none;
   }
-  
-  #userInfo,
-  #guestBtns {
-    display: flex !important;
-    align-items: center;
+  nav a {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 56.25rem) {
+  nav {
+    display: none;
+  }
+  .burger {
+    display: flex;
+  }
+
+  .header-actions {
     gap: 0.3rem;
   }
 
@@ -1752,7 +1424,7 @@ textarea:focus {
   }
 
   .welcome-text {
-    display: none; /* სახელი მობილურზე იმარტივება */
+    display: none;
   }
 
   .btn-outline.small {
@@ -1760,14 +1432,98 @@ textarea:focus {
     font-size: 0.78rem;
     white-space: nowrap;
   }
+
+  .section {
+    padding: 2.5rem 1rem;
+  }
+  .products {
+    grid-template-columns: 1fr 1fr;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .reviews-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .booking-page {
+    padding: 2rem 1rem;
+  }
+  .reviews-page {
+    padding: 2rem 1rem;
+  }
+  .auth-container {
+    padding: 1.5rem;
+  }
+  .hero {
+    padding: 3.5rem 1.5rem 3rem;
+  }
 }
 
 @media (max-width: 37.5rem) {
-  .btn-outline {
-    padding: 0.35rem 0.55rem;
+  .header-inner {
+    padding: 0.6rem 1rem;
   }
-  
+  .logo span {
+    font-size: 1.3rem;
+  }
+
+  .btn-outline {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.78rem;
+  }
   .btn-outline .btn-icon {
-    display: none; /* icon იმარტივება პატარა ეკრანზე */
+    display: none;
+  }
+  .btn-main {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .products {
+    grid-template-columns: 1fr;
+  }
+  .footer-inner {
+    grid-template-columns: 1fr;
+    padding: 1.5rem 1rem;
+  }
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title {
+    font-size: 1.7rem;
+  }
+  .form-card {
+    padding: 1.25rem;
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+  .auth-container {
+    padding: 1.25rem;
+  }
+  .page-title {
+    font-size: 1.8rem;
+  }
+  .not-found-num {
+    font-size: 5rem;
+  }
+  .modal {
+    padding: 1.5rem;
+  }
+
+  .search-wrap input {
+    width: 100%;
+  }
+  .dropdown {
+    width: 100%;
   }
 }
+/* #endregion RESPONSIVE */
